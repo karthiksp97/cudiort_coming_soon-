@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intellio - Digital Marketing Services</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #0a0e27;
+  overflow-x: hidden;
+}
+
+.particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.intellio-header-area {
+  position: relative;
+  z-index: 999;
+  padding: 20px 0;
+}
+
+.intellio-header-area.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(10px);
+  animation: slideInDown 0.5s ease;
+  box-shadow: 0 2px 20px rgba(103, 102, 255, 0.3);
+}
+
+@keyframes slideInDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+.auto-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo img {
+  height: 40px;
+}
+
+.header-menu ul {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.header-menu ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.header-menu ul li a:hover {
+  color: #6766FF;
+}
+
+.header-right-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-btn a {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #6766FF;
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.header-btn a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(103, 102, 255, 0.4);
+}
+
+.demo-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 20px 60px;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+}
+
+.content-wrapper h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.content-wrapper p {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: #a0aec0;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 18px 45px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+}
+
+.marketing-features {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.feature-label {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 10px 20px;
+  background: rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(102, 126, 234, 0.4);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  animation: float 3s ease-in-out infinite;
+}
+
+.feature-label:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+.feature-label:nth-child(2) { top: 25%; right: 15%; animation-delay: 1s; }
+.feature-label:nth-child(3) { bottom: 25%; left: 15%; animation-delay: 2s; }
+.feature-label:nth-child(4) { bottom: 35%; right: 10%; animation-delay: 1.5s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+.content-section {
+  position: relative;
+  z-index: 10;
+  background: #0a0e27;
+  padding: 80px 20px;
+}
+
+.section-title {
+  text-align: center;
+  color: #fff;
+  font-size: 2.5rem;
+  margin-bottom: 60px;
+  font-weight: 700;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: linear-gradient(145deg, rgba(15, 9, 39, 0.9), rgba(33, 27, 57, 0.9));
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(103, 102, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-color: #6766FF;
+  box-shadow: 0 20px 40px rgba(103, 102, 255, 0.3);
+}
+
+.feature-card h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .header-menu { display: none; }
+  .feature-label { font-size: 10px; padding: 6px 12px; }
+  .feature-label:nth-child(3), .feature-label:nth-child(4) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="intellio-header-area" id="sticky-header">
+  <div class="auto-container">
+    <div class="row">
+      <div class="header-logo">
+        <a href="#"><img src="https://via.placeholder.com/120x40/6766FF/FFFFFF?text=INTELLIO" alt="logo"></a>
+      </div>
+      <div class="header-menu">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="header-right-wrapper">
+        <div class="header-btn">
+          <a href="#trial">Free Consultation →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-section" id="home">
+  <div class="particle-container">
+    <canvas id="marketingCanvas"></canvas>
+  </div>
+  
+  <div class="marketing-features">
+    <div class="feature-label">📊 Analytics</div>
+    <div class="feature-label">🎯 Ad Campaigns</div>
+    <div class="feature-label">📱 Social Media</div>
+    <div class="feature-label">📈 ROI Growth</div>
+  </div>
+  
+  <div class="content-wrapper">
+    <h1>Digital Marketing Excellence</h1>
+    <p>Watch your campaigns come to life. From social media posts to Google Ads, email blasts to SEO rankings - see how integrated marketing strategies drive real results and measurable growth.</p>
+    <a href="#explore" class="cta-button">Boost Your Brand</a>
+  </div>
+</div>
+
+<div class="content-section" id="services">
+  <h2 class="section-title">Our Marketing Services</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>SEO Optimization</h3>
+      <p>Rank higher on search engines with AI-powered SEO strategies and content optimization.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Social Media Marketing</h3>
+      <p>Engage your audience across all platforms with data-driven social media campaigns.</p>
+    </div>
+    <div class="feature-card">
+      <h3>PPC Advertising</h3>
+      <p>Maximize ROI with targeted pay-per-click campaigns and conversion optimization.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Content Marketing</h3>
+      <p>Create compelling content that resonates with your audience and drives engagement.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Email Marketing</h3>
+      <p>Build lasting relationships with personalized email campaigns and automation.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Analytics & Reporting</h3>
+      <p>Track performance with comprehensive analytics and actionable insights.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+class DigitalMarketingEcosystem {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    
+    this.platforms = [];
+    this.adCampaigns = [];
+    this.socialPosts = [];
+    this.emailCampaigns = [];
+    this.analyticsData = [];
+    this.conversions = [];
+    this.searchResults = [];
+    this.mouse = { x: null, y: null };
+    
+    this.platformIcons = ['📱', '💻', '🌐', '📧', '🔍', '📊'];
+    this.colors = {
+      social: '#1DA1F2',
+      ads: '#6766FF',
+      email: '#EA4335',
+      seo: '#34A853',
+      analytics: '#FBBC04',
+      conversion: '#00FF88'
+    };
+    
+    this.init();
+    this.setupEventListeners();
+    this.animate();
+  }
+  
+  init() {
+    this.resizeCanvas();
+    this.createPlatforms();
+  }
+  
+  resizeCanvas() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  
+  createPlatforms() {
+    const centerX = this.canvas.width / 2;
+    const centerY = this.canvas.height / 2;
+    const radius = Math.min(this.canvas.width, this.canvas.height) * 0.25;
+    
+    const platformData = [
+      { name: 'Social Media', icon: '📱', color: this.colors.social, type: 'social' },
+      { name: 'Google Ads', icon: '🔍', color: this.colors.ads, type: 'ads' },
+      { name: 'Email', icon: '📧', color: this.colors.email, type: 'email' },
+      { name: 'SEO', icon: '🌐', color: this.colors.seo, type: 'seo' },
+      { name: 'Analytics', icon: '📊', color: this.colors.analytics, type: 'analytics' },
+      { name: 'Website', icon: '💻', color: this.colors.conversion, type: 'conversion' }
+    ];
+    
+    this.platforms = platformData.map((p, i) => {
+      const angle = (i / platformData.length) * Math.PI * 2 - Math.PI / 2;
+      return {
+        ...p,
+        x: centerX + Math.cos(angle) * radius,
+        y: centerY + Math.sin(angle) * radius,
+        baseX: centerX + Math.cos(angle) * radius,
+        baseY: centerY + Math.sin(angle) * radius,
+        radius: 35,
+        pulse: 0,
+        active: false
+      };
+    });
+  }
+  
+  setupEventListeners() {
+    window.addEventListener('resize', () => {
+      this.resizeCanvas();
+      this.createPlatforms();
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.x;
+      this.mouse.y = e.y;
+    });
+  }
+  
+  spawnMarketingElements() {
+    if (Math.random() > 0.97) {
+      const platform = this.platforms[Math.floor(Math.random() * this.platforms.length)];
+      const centerX = this.canvas.width / 2;
+      const centerY = this.canvas.height / 2;
+      
+      if (platform.type === 'social') {
+        this.socialPosts.push({
+          x: platform.x,
+          y: platform.y,
+          targetX: centerX + (Math.random() - 0.5) * 400,
+          targetY: centerY + (Math.random() - 0.5) * 400,
+          progress: 0,
+          icon: '💬',
+          color: platform.color,
+          likes: 0,
+          shares: 0
+        });
+      } else if (platform.type === 'ads') {
+        this.adCampaigns.push({
+          x: platform.x,
+          y: platform.y,
+          targetX: centerX + (Math.random() - 0.5) * 300,
+          targetY: centerY + (Math.random() - 0.5) * 300,
+          progress: 0,
+          icon: '🎯',
+          color: platform.color,
+          clicks: 0,
+          impressions: 0
+        });
+      } else if (platform.type === 'email') {
+        this.emailCampaigns.push({
+          x: platform.x,
+          y: platform.y,
+          targetX: centerX + (Math.random() - 0.5) * 350,
+          targetY: centerY + (Math.random() - 0.5) * 350,
+          progress: 0,
+          icon: '✉️',
+          color: platform.color,
+          opens: 0
+        });
+      } else if (platform.type === 'seo') {
+        this.searchResults.push({
+          x: platform.x,
+          y: platform.y,
+          targetX: centerX + (Math.random() - 0.5) * 300,
+          targetY: centerY + (Math.random() - 0.5) * 300,
+          progress: 0,
+          icon: '🔍',
+          color: platform.color,
+          ranking: Math.floor(Math.random() * 3) + 1
+        });
+      }
+    }
+    
+    if (Math.random() > 0.985) {
+      const centerX = this.canvas.width / 2;
+      const centerY = this.canvas.height / 2;
+      
+      this.analyticsData.push({
+        x: centerX + (Math.random() - 0.5) * 200,
+        y: centerY + (Math.random() - 0.5) * 200,
+        value: Math.floor(Math.random() * 1000),
+        life: 100,
+        color: this.colors.analytics
+      });
+    }
+    
+    if (Math.random() > 0.98) {
+      const centerX = this.canvas.width / 2;
+      const centerY = this.canvas.height / 2;
+      
+      this.conversions.push({
+        x: centerX,
+        y: centerY,
+        radius: 5,
+        maxRadius: 80,
+        color: this.colors.conversion,
+        alpha: 1
+      });
+    }
+  }
+  
+  drawPlatforms() {
+    const centerX = this.canvas.width / 2;
+    const centerY = this.canvas.height / 2;
+    
+    this.platforms.forEach(platform => {
+      const distance = Math.sqrt(
+        Math.pow(platform.x - centerX, 2) + 
+        Math.pow(platform.y - centerY, 2)
+      );
+      
+      this.ctx.strokeStyle = platform.color + '33';
+      this.ctx.lineWidth = 2;
+      this.ctx.setLineDash([5, 5]);
+      this.ctx.beginPath();
+      this.ctx.arc(centerX, centerY, distance, 0, Math.PI * 2);
+      this.ctx.stroke();
+      this.ctx.setLineDash([]);
+      
+      platform.pulse += 0.05;
+      const pulseSize = Math.sin(platform.pulse) * 5 + platform.radius;
+      
+      const gradient = this.ctx.createRadialGradient(
+        platform.x, platform.y, 0,
+        platform.x, platform.y, pulseSize * 1.5
+      );
+      gradient.addColorStop(0, platform.color + 'AA');
+      gradient.addColorStop(1, platform.color + '00');
+      
+      this.ctx.fillStyle = gradient;
+      this.ctx.beginPath();
+      this.ctx.arc(platform.x, platform.y, pulseSize * 1.5, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      this.ctx.fillStyle = platform.color;
+      this.ctx.beginPath();
+      this.ctx.arc(platform.x, platform.y, pulseSize, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      this.ctx.font = '24px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillText(platform.icon, platform.x, platform.y);
+      
+      this.ctx.font = 'bold 11px Arial';
+      this.ctx.fillStyle = '#ffffff';
+      this.ctx.fillText(platform.name, platform.x, platform.y + pulseSize + 20);
+    });
+  }
+  
+  drawSocialPosts() {
+    this.socialPosts = this.socialPosts.filter(post => {
+      post.progress += 0.015;
+      
+      if (post.progress > 1) {
+        post.likes++;
+        if (Math.random() > 0.7) post.shares++;
+        return post.progress < 1.5;
+      }
+      
+      const currentX = post.x + (post.targetX - post.x) * Math.min(post.progress, 1);
+      const currentY = post.y + (post.targetY - post.y) * Math.min(post.progress, 1);
+      
+      this.ctx.strokeStyle = post.color + '44';
+      this.ctx.lineWidth = 1.5;
+      this.ctx.setLineDash([3, 3]);
+      this.ctx.beginPath();
+      this.ctx.moveTo(post.x, post.y);
+      this.ctx.lineTo(currentX, currentY);
+      this.ctx.stroke();
+      this.ctx.setLineDash([]);
+      
+      this.ctx.font = '20px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillText(post.icon, currentX, currentY);
+      
+      const gradient = this.ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, 15);
+      gradient.addColorStop(0, post.color + '66');
+      gradient.addColorStop(1, post.color + '00');
+      this.ctx.fillStyle = gradient;
+      this.ctx.beginPath();
+      this.ctx.arc(currentX, currentY, 15, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      if (post.likes > 0) {
+        this.ctx.font = 'bold 10px Arial';
+        this.ctx.fillStyle = '#ffffff';
+        this.ctx.fillText(`❤️ ${post.likes}`, currentX, currentY + 25);
+      }
+      
+      return true;
+    });
+  }
+  
+  drawAdCampaigns() {
+    this.adCampaigns = this.adCampaigns.filter(ad => {
+      ad.progress += 0.02;
+      
+      if (ad.progress > 1) {
+        ad.clicks++;
+        ad.impressions += Math.floor(Math.random() * 10) + 5;
+        return ad.progress < 1.3;
+      }
+      
+      const currentX = ad.x + (ad.targetX - ad.x) * Math.min(ad.progress, 1);
+      const currentY = ad.y + (ad.targetY - ad.y) * Math.min(ad.progress, 1);
+      
+      this.ctx.strokeStyle = ad.color + '66';
+      this.ctx.lineWidth = 2;
+      this.ctx.beginPath();
+      this.ctx.moveTo(ad.x, ad.y);
+      this.ctx.lineTo(currentX, currentY);
+      this.ctx.stroke();
+      
+      this.ctx.font = '18px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillText(ad.icon, currentX, currentY);
+      
+      if (ad.clicks > 0) {
+        this.ctx.font = 'bold 9px Arial';
+        this.ctx.fillStyle = '#00FF88';
+        this.ctx.fillText(`${ad.clicks} clicks`, currentX, currentY + 20);
+      }
+      
+      return true;
+    });
+  }
+  
+  drawEmailCampaigns() {
+    this.emailCampaigns = this.emailCampaigns.filter(email => {
+      email.progress += 0.018;
+      
+      if (email.progress > 1) {
+        email.opens++;
+        return email.progress < 1.4;
+      }
+      
+      const currentX = email.x + (email.targetX - email.x) * Math.min(email.progress, 1);
+      const currentY = email.y + (email.targetY - email.y) * Math.min(email.progress, 1);
+      
+      this.ctx.font = '18px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillText(email.icon, currentX, currentY);
+      
+      const gradient = this.ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, 20);
+      gradient.addColorStop(0, email.color + '44');
+      gradient.addColorStop(1, email.color + '00');
+      this.ctx.fillStyle = gradient;
+      this.ctx.beginPath();
+      this.ctx.arc(currentX, currentY, 20, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      return true;
+    });
+  }
+  
+  drawSearchResults() {
+    this.searchResults = this.searchResults.filter(result => {
+      result.progress += 0.016;
+      
+      if (result.progress > 1.2) return false;
+      
+      const currentX = result.x + (result.targetX - result.x) * Math.min(result.progress, 1);
+      const currentY = result.y + (result.targetY - result.y) * Math.min(result.progress, 1);
+      
+      this.ctx.font = '16px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillText(result.icon, currentX, currentY);
+      
+      this.ctx.font = 'bold 12px Arial';
+      this.ctx.fillStyle = result.color;
+      this.ctx.fillText(`#${result.ranking}`, currentX, currentY + 20);
+      
+      return true;
+    });
+  }
+  
+  drawAnalytics() {
+    this.analyticsData = this.analyticsData.filter(data => {
+      data.life -= 1;
+      data.y -= 1;
+      
+      if (data.life <= 0) return false;
+      
+      const alpha = data.life / 100;
+      this.ctx.font = 'bold 14px Arial';
+      this.ctx.fillStyle = data.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText(`+${data.value}`, data.x, data.y);
+      
+      return true;
+    });
+  }
+  
+  drawConversions() {
+    this.conversions = this.conversions.filter(conv => {
+      conv.radius += 2;
+      conv.alpha -= 0.02;
+      
+      if (conv.alpha <= 0) return false;
+      
+      this.ctx.strokeStyle = conv.color + Math.floor(conv.alpha * 255).toString(16).padStart(2, '0');
+      this.ctx.lineWidth = 3;
+      this.ctx.beginPath();
+      this.ctx.arc(conv.x, conv.y, conv.radius, 0, Math.PI * 2);
+      this.ctx.stroke();
+      
+      this.ctx.font = 'bold 16px Arial';
+      this.ctx.fillStyle = '#ffffff';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText('💰', conv.x, conv.y);
+      
+      return true;
+    });
+  }
+  
+  drawROIChart() {
+    const chartX = this.canvas.width - 180;
+    const chartY = 80;
+    const chartWidth = 140;
+    const chartHeight = 60;
+    
+    this.ctx.fillStyle = 'rgba(103, 102, 255, 0.1)';
+    this.ctx.fillRect(chartX, chartY, chartWidth, chartHeight);
+    
+    this.ctx.strokeStyle = '#6766FF';
+    this.ctx.lineWidth = 2;
+    this.ctx.beginPath();
+    for (let i = 0; i <= 10; i++) {
+      const x = chartX + (i / 10) * chartWidth;
+      const y = chartY + chartHeight - Math.sin(i * 0.5 + Date.now() * 0.002) * 20 - 20;
+      if (i === 0) this.ctx.moveTo(x, y);
+      else this.ctx.lineTo(x, y);
+    }
+    this.ctx.stroke();
+    
+    this.ctx.font = 'bold 12px Arial';
+    this.ctx.fillStyle = '#00FF88';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText('ROI ↗', chartX + chartWidth / 2, chartY - 10);
+  }
+  
+  animate() {
+    this.ctx.fillStyle = 'rgba(10, 14, 39, 0.15)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.spawnMarketingElements();
+    this.drawPlatforms();
+    this.drawSocialPosts();
+    this.drawAdCampaigns();
+    this.drawEmailCampaigns();
+    this.drawSearchResults();
+    this.drawAnalytics();
+    this.drawConversions();
+    this.drawROIChart();
+    
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  new DigitalMarketingEcosystem('marketingCanvas');
+  
+  const header = document.getElementById('sticky-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('sticky', window.scrollY > 100);
+  });
+});
+</script>
+
+</body>
+</html>

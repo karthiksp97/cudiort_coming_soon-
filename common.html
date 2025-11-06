@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intellio - Multidisciplinary AI, Science & Tech</title>
+<style>
+/* ------------------------------------ */
+/* 0. CSS Variables & Base Reset */
+/* ------------------------------------ */
+:root {
+  --color-primary: #6766FF;
+  /* 5-Division Colors */
+  --color-science: #10B981;    
+  --color-ai: #3B82F6;         
+  --color-dev: #F59E0B;        
+  --color-marketing: #48DBFB;  
+  --color-creative: #ED64A6;   
+  
+  --bg-dark: #0a0e27;
+  --card-bg: #141834; /* Solid, darker background for clarity */
+  --text-light: rgba(255, 255, 255, 0.9);
+  --text-muted: rgba(255, 255, 255, 0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Arial', sans-serif;
+  background: var(--bg-dark);
+  /* Changed overflow to allow vertical scroll for the detailed content */
+  overflow-y: auto; 
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start; /* Align content to the top */
+  justify-content: center;
+  padding: 60px 0 80px; /* Top and bottom padding */
+}
+
+/* ------------------------------------ */
+/* 1. Particle Canvas (The Core Brain) - Preserved, but adjusted z-index */
+/* ------------------------------------ */
+.particle-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1; 
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------ */
+/* 2. Main Content & Header */
+/* ------------------------------------ */
+.main-director {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 1400px;
+  padding: 0 40px;
+  width: 100%;
+}
+
+.main-director h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  color: #fff;
+  margin-bottom: 16px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.main-director p {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin-bottom: 70px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ------------------------------------ */
+/* 3. Division Cards (NEW STRUCTURE CSS) */
+/* ------------------------------------ */
+.service-pathways {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.division-card {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease-in-out;
+  text-align: left;
+  height: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.division-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.division-icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.division-card h2 {
+  font-size: 1.5rem;
+  color: var(--text-light);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.division-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  line-height: 1.5;
+  flex-grow: 1; /* Allows the description to take up space */
+}
+
+/* Service List Styling */
+.services-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 15px;
+}
+
+.services-list li {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  padding-left: 15px;
+  position: relative;
+}
+
+.services-list li::before {
+  content: '→'; /* Use a subtle bullet point */
+  position: absolute;
+  left: 0;
+  color: var(--color-primary); /* Use a primary color for the bullet */
+  font-weight: bold;
+}
+
+/* Explore Button */
+.explore-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  background: var(--color-primary);
+  color: #fff;
+  align-self: flex-start;
+  margin-top: auto; /* Push button to the bottom */
+}
+
+.explore-btn:hover {
+  background: #4745e6;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 15px var(--color-primary);
+}
+
+/* --- Division Specific Colors and Styles --- */
+
+/* Science & Research Tech */
+.division-card[data-division="science"] .division-icon svg { color: var(--color-science); }
+.division-card[data-division="science"]:hover { border-color: var(--color-science); }
+.division-card[data-division="science"] .services-list li::before { color: var(--color-science); }
+
+/* Artificial Intelligence */
+.division-card[data-division="ai"] .division-icon svg { color: var(--color-ai); }
+.division-card[data-division="ai"]:hover { border-color: var(--color-ai); }
+.division-card[data-division="ai"] .services-list li::before { color: var(--color-ai); }
+
+/* Custom Development */
+.division-card[data-division="dev"] .division-icon svg { color: var(--color-dev); }
+.division-card[data-division="dev"]:hover { border-color: var(--color-dev); }
+.division-card[data-division="dev"] .services-list li::before { color: var(--color-dev); }
+
+/* Digital Marketing */
+.division-card[data-division="marketing"] .division-icon svg { color: var(--color-marketing); }
+.division-card[data-division="marketing"]:hover { border-color: var(--color-marketing); }
+.division-card[data-division="marketing"] .services-list li::before { color: var(--color-marketing); }
+
+/* Creative Design */
+.division-card[data-division="creative"] .division-icon svg { color: var(--color-creative); }
+.division-card[data-division="creative"]:hover { border-color: var(--color-creative); }
+.division-card[data-division="creative"] .services-list li::before { color: var(--color-creative); }
+
+
+/* ------------------------------------ */
+/* 4. Mobile Responsiveness */
+/* ------------------------------------ */
+@media (max-width: 1200px) {
+    .service-pathways {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .main-director {
+        padding: 0 24px;
+    }
+    .service-pathways {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .service-pathways {
+        grid-template-columns: 1fr; 
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    .division-card h2 {
+        font-size: 1.4rem;
+    }
+}
+
+/* Sound toggle button - UNCHANGED */
+#soundToggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 100;
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+#soundToggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--color-primary);
+}
+</style>
+</head>
+<body>
+
+<div class="particle-container">
+  <canvas id="neuralCanvas"></canvas>
+</div>
+  
+<div class="main-director">
+  
+    <h1>Intellio: The Fusion of Science, AI, and Innovation</h1>
+    <p>We are a multidisciplinary technology firm, building the future at the intersection of bio-tech, artificial intelligence, custom software, and digital strategy. **Select a division to explore our expertise.**</p>
+
+    <div class="service-pathways">
+        <div class="division-card" data-division="science">
+            <div class="division-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 2v2.5M15 2v2.5M9 21.5V19M15 21.5V19"/>
+                    <path d="M4.5 15H2M22 15h-2.5M4.5 9H2M22 9h-2.5"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <circle cx="12" cy="12" r="8"/>
+                </svg>
+            </div>
+            <h2>Science & Research Tech</h2>
+            <p>Cutting-edge computational biology and bioinformatics solutions for the next generation of research.</p>
+            <ul class="services-list">
+                <li>Bioinformatics & Data Analysis</li>
+                <li>Bio-Computing & Simulation</li>
+                <li>DNA Data Storage & Cloud</li>
+                <li>AI for Biology</li>
+            </ul>
+            <button class="explore-btn" onclick="window.location.href='science-research.html'">Explore →</button>
+        </div>
+        
+        <div class="division-card" data-division="ai">
+            <div class="division-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <h2>Artificial Intelligence</h2>
+            <p>Intelligent automation and machine learning systems that transform how businesses operate.</p>
+            <ul class="services-list">
+                <li>AI Agent Development</li>
+                <li>Workflow Automation</li>
+                <li>Synthetic Data Services</li>
+                <li>Edge AI & Hardware Optimization</li>
+            </ul>
+            <button class="explore-btn" onclick="window.location.href='artificial-intelligence.html'">Explore →</button>
+        </div>
+        
+        <div class="division-card" data-division="dev">
+            <div class="division-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
+                </svg>
+            </div>
+            <h2>Custom Development</h2>
+            <p>Tailored software solutions built from the ground up to meet your exact specifications.</p>
+            <ul class="services-list">
+                <li>Web & Mobile Applications</li>
+                <li>Enterprise Software</li>
+                <li>API Development & Integration</li>
+                <li>Full-Stack Solutions</li>
+            </ul>
+            <button class="explore-btn" onclick="window.location.href='custom-development.html'">Explore →</button>
+        </div>
+        
+        <div class="division-card" data-division="marketing">
+            <div class="division-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+            </div>
+            <h2>Digital Marketing</h2>
+            <p>Data-driven strategies that amplify your brand and drive measurable growth.</p>
+            <ul class="services-list">
+                <li>SEO & Content Strategy</li>
+                <li>Paid Advertising Campaigns</li>
+                <li>Social Media Management</li>
+                <li>Analytics & Optimization</li>
+            </ul>
+            <button class="explore-btn" onclick="window.location.href='digital-marketing.html'">Explore →</button>
+        </div>
+        
+        <div class="division-card" data-division="creative">
+            <div class="division-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+            </div>
+            <h2>Creative Design</h2>
+            <p>Visual storytelling that captures attention and communicates your unique identity.</p>
+            <ul class="services-list">
+                <li>Brand Identity & Design</li>
+                <li>Video Production & Editing</li>
+                <li>Photography & Retouching</li>
+                <li>Motion Graphics</li>
+            </ul>
+            <button class="explore-btn" onclick="window.location.href='creative-design.html'">Explore →</button>
+        </div>
+    </div>
+</div>
+
+<button id="soundToggle">🔊 Sound On</button>
+
+<script>
+// NOTE: The particle system and sound manager remain unchanged as requested
+// and will work with this new HTML structure.
+
+// ------------------------------------
+// Neural Network Particle System 
+// ------------------------------------
+class NeuralNetworkParticles {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.particles = [];
+    this.mouse = { x: null, y: null, radius: 120 };
+    this.particleCount = this.isMobile() ? 25 : 50;
+    this.init();
+    this.setupEventListeners();
+    this.animate();
+  }
+  
+  isMobile() {
+    return window.innerWidth < 768;
+  }
+  
+  init() {
+    this.resizeCanvas();
+    this.createParticles();
+  }
+  
+  resizeCanvas() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  
+  getServiceTheme(index) {
+    const themes = [
+      { type: 'science', color: 'rgba(16, 185, 129, ' },    // Emerald Green
+      { type: 'ai', color: 'rgba(59, 130, 246, ' },         // Bright Blue
+      { type: 'development', color: 'rgba(245, 158, 11, ' }, // Amber Yellow
+      { type: 'marketing', color: 'rgba(72, 219, 251, ' },  // Cyan
+      { type: 'creative', color: 'rgba(237, 100, 166, ' },  // Pink
+    ];
+    return themes[index % themes.length];
+  }
+  
+  createParticles() {
+    this.particles = [];
+    for (let i = 0; i < this.particleCount; i++) {
+      const theme = this.getServiceTheme(i);
+      this.particles.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        radius: (Math.random() * 1.2 + 0.8) * 1.2,
+        color: theme.color,
+        type: theme.type,
+        pulseSpeed: Math.random() * 0.01 + 0.005,
+        pulsePhase: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+  
+  setupEventListeners() {
+    window.addEventListener('resize', () => {
+      this.resizeCanvas();
+      this.particleCount = this.isMobile() ? 25 : 50;
+      this.createParticles();
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.x;
+      this.mouse.y = e.y;
+    });
+    
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        this.mouse.x = e.touches[0].clientX;
+        this.mouse.y = e.touches[0].clientY;
+      }
+    });
+    
+    window.addEventListener('touchend', () => {
+      this.mouse.x = null;
+      this.mouse.y = null;
+    });
+  }
+  
+  drawParticle(particle) {
+    const pulse = Math.sin(Date.now() * particle.pulseSpeed + particle.pulsePhase);
+    const alpha = 0.3 + pulse * 0.2;
+    
+    const gradient = this.ctx.createRadialGradient(
+      particle.x, particle.y, 0,
+      particle.x, particle.y, particle.radius * 2
+    );
+    gradient.addColorStop(0, particle.color + '0.6)');
+    gradient.addColorStop(1, particle.color + '0)');
+    
+    this.ctx.fillStyle = gradient;
+    this.ctx.beginPath();
+    this.ctx.arc(particle.x, particle.y, particle.radius * 2, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    this.ctx.fillStyle = particle.color + alpha + ')';
+    this.ctx.beginPath();
+    this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+    this.ctx.fill();
+  }
+  
+  drawConnections() {
+    const maxDistance = this.isMobile() ? 80 : 120;
+    
+    for (let i = 0; i < this.particles.length; i++) {
+      for (let j = i + 1; j < this.particles.length; j++) {
+        const p1 = this.particles[i];
+        const p2 = this.particles[j];
+
+        const dx = p1.x - p2.x;
+        const dy = p1.y - p2.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < maxDistance) {
+          const opacity = (1 - distance / maxDistance) * 0.2;
+
+          let strokeColor = `rgba(102, 126, 234, ${opacity})`; 
+          if (p1.type === p2.type) {
+              strokeColor = `rgba(255, 255, 255, ${opacity * 1.2})`; 
+          }
+          
+          this.ctx.strokeStyle = strokeColor;
+          this.ctx.lineWidth = 0.5;
+          this.ctx.beginPath();
+          this.ctx.moveTo(p1.x, p1.y);
+          this.ctx.lineTo(p2.x, p2.y);
+          this.ctx.stroke();
+        }
+      }
+    }
+  }
+  
+  drawMouseInteraction() {
+    if (!this.mouse.x || !this.mouse.y) return;
+    
+    this.particles.forEach(particle => {
+      const dx = this.mouse.x - particle.x;
+      const dy = this.mouse.y - particle.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance < this.mouse.radius) {
+        const opacity = (1 - distance / this.mouse.radius) * 0.4;
+        this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.mouse.x, this.mouse.y);
+        this.ctx.lineTo(particle.x, particle.y);
+        this.ctx.stroke();
+        
+        const force = (this.mouse.radius - distance) / this.mouse.radius;
+        particle.vx -= (dx / distance) * force * 0.05;
+        particle.vy -= (dy / distance) * force * 0.05;
+      }
+    });
+  }
+  
+  updateParticles() {
+    this.particles.forEach(particle => {
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+      
+      if (particle.x < 0 || particle.x > this.canvas.width) {
+        particle.vx *= -0.8;
+      }
+      if (particle.y < 0 || particle.y > this.canvas.height) {
+        particle.vy *= -0.8;
+      }
+      
+      particle.vx *= 0.995; 
+      particle.vy *= 0.995;
+      particle.vx += (Math.random() - 0.5) * 0.005;
+      particle.vy += (Math.random() - 0.5) * 0.005;
+    });
+  }
+  
+  animate() {
+    this.ctx.fillStyle = 'rgba(10, 14, 39, 0.25)'; 
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.drawConnections();
+    this.particles.forEach(p => this.drawParticle(p));
+    this.drawMouseInteraction();
+    this.updateParticles();
+    
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+// ------------------------------------
+// Sound Effects Management 
+// ------------------------------------
+class SoundManager {
+  constructor() {
+    this.soundsEnabled = true;
+    this.audioContext = null;
+    
+    this.setupAudioContext();
+    this.setupSoundToggle();
+  }
+  
+  setupAudioContext() {
+    try {
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) {
+      console.log("Web Audio API not supported");
+    }
+  }
+  
+  playSoundScience() {
+    if (!this.soundsEnabled || !this.audioContext) return;
+    const osc = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(this.audioContext.destination);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(440, this.audioContext.currentTime);
+    osc.frequency.linearRampToValueAtTime(880, this.audioContext.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.25);
+    osc.start(this.audioContext.currentTime);
+    osc.stop(this.audioContext.currentTime + 0.25);
+  }
+
+  playSoundAI() {
+    if (!this.soundsEnabled || !this.audioContext) return;
+    const osc = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(this.audioContext.destination);
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(300, this.audioContext.currentTime);
+    osc.frequency.linearRampToValueAtTime(600, this.audioContext.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.35, this.audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.2);
+    osc.start(this.audioContext.currentTime);
+    osc.stop(this.audioContext.currentTime + 0.2);
+  }
+
+  playSoundDevelopment() {
+    if (!this.soundsEnabled || !this.audioContext) return;
+    const osc = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(this.audioContext.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, this.audioContext.currentTime);
+    gain.gain.setValueAtTime(0.4, this.audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.4);
+    osc.start(this.audioContext.currentTime);
+    osc.stop(this.audioContext.currentTime + 0.4);
+  }
+
+  playSoundMarketing() {
+    if (!this.soundsEnabled || !this.audioContext) return;
+    const osc = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(this.audioContext.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(350, this.audioContext.currentTime);
+    osc.frequency.linearRampToValueAtTime(500, this.audioContext.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.3);
+    osc.start(this.audioContext.currentTime);
+    osc.stop(this.audioContext.currentTime + 0.3);
+  }
+
+  playSoundCreative() {
+    if (!this.soundsEnabled || !this.audioContext) return;
+    const osc = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(this.audioContext.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, this.audioContext.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, this.audioContext.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
+    osc.start(this.audioContext.currentTime);
+    osc.stop(this.audioContext.currentTime + 0.3);
+  }
+  
+  playHoverSound() {
+    if (!this.soundsEnabled || !this.audioContext) return;
+    
+    const oscillator = this.audioContext.createOscillator();
+    const gainNode = this.audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
+    
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(600, this.audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(800, this.audioContext.currentTime + 0.1);
+    
+    gainNode.gain.setValueAtTime(0.2, this.audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.15);
+    
+    oscillator.start(this.audioContext.currentTime);
+    oscillator.stop(this.audioContext.currentTime + 0.15);
+  }
+  
+  setupSoundToggle() {
+    const toggleButton = document.getElementById('soundToggle');
+    toggleButton.addEventListener('click', () => {
+      this.soundsEnabled = !this.soundsEnabled;
+      toggleButton.textContent = this.soundsEnabled ? '🔊 Sound On' : '🔇 Sound Off';
+      
+      if (this.soundsEnabled && this.audioContext && this.audioContext.state === 'suspended') {
+        this.audioContext.resume();
+      }
+    });
+  }
+}
+
+// ------------------------------------
+// Initialize Everything 
+// ------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  new NeuralNetworkParticles('neuralCanvas');
+  
+  const soundManager = new SoundManager();
+  
+  // Attach hover sound to the new .division-card elements
+  const divisionCards = document.querySelectorAll('.division-card');
+  
+  divisionCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      soundManager.playHoverSound();
+    });
+    
+    // NOTE: Clicks are now attached to the button, but we'll leave this for general card interaction
+    card.addEventListener('click', (e) => {
+      // Prevent sound if the button was clicked, which already has an action
+      if (e.target.classList.contains('explore-btn')) return;
+
+      const serviceType = card.getAttribute('data-division');
+      
+      switch(serviceType) {
+        case 'science':
+          soundManager.playSoundScience();
+          break;
+        case 'ai':
+          soundManager.playSoundAI();
+          break;
+        case 'dev':
+          soundManager.playSoundDevelopment();
+          break;
+        case 'marketing':
+          soundManager.playSoundMarketing();
+          break;
+        case 'creative':
+          soundManager.playSoundCreative();
+          break;
+      }
+    });
+  });
+  
+  document.body.addEventListener('click', () => {
+    if (soundManager.audioContext && soundManager.audioContext.state === 'suspended') {
+      soundManager.audioContext.resume();
+    }
+  }, { once: true });
+});
+</script>
+
+</body>
+</html>

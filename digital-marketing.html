@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intellio - Digital Marketing Services</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #0a0e27;
+  overflow-x: hidden;
+}
+
+.particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.intellio-header-area {
+  position: relative;
+  z-index: 999;
+  padding: 20px 0;
+}
+
+.intellio-header-area.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(10px);
+  animation: slideInDown 0.5s ease;
+  box-shadow: 0 2px 20px rgba(255, 107, 107, 0.3);
+}
+
+@keyframes slideInDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+.auto-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo img {
+  height: 40px;
+}
+
+.header-menu ul {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.header-menu ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.header-menu ul li a:hover {
+  color: #FF6B6B;
+}
+
+.header-right-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-btn a {
+  display: inline-block;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.header-btn a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
+}
+
+.demo-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 20px 60px;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+}
+
+.content-wrapper h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.content-wrapper p {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: #a0aec0;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 18px 45px;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(255, 107, 107, 0.5);
+}
+
+.marketing-features {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.feature-label {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 10px 20px;
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  animation: float 3s ease-in-out infinite;
+}
+
+.feature-label:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+.feature-label:nth-child(2) { top: 25%; right: 15%; animation-delay: 1s; }
+.feature-label:nth-child(3) { bottom: 25%; left: 15%; animation-delay: 2s; }
+.feature-label:nth-child(4) { bottom: 35%; right: 10%; animation-delay: 1.5s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+.content-section {
+  position: relative;
+  z-index: 10;
+  background: #0a0e27;
+  padding: 80px 20px;
+}
+
+.section-title {
+  text-align: center;
+  color: #fff;
+  font-size: 2.5rem;
+  margin-bottom: 60px;
+  font-weight: 700;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: linear-gradient(145deg, rgba(15, 9, 39, 0.9), rgba(33, 27, 57, 0.9));
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-color: #FF6B6B;
+  box-shadow: 0 20px 40px rgba(255, 107, 107, 0.3);
+}
+
+.feature-card h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .header-menu { display: none; }
+  .feature-label { font-size: 10px; padding: 6px 12px; }
+  .feature-label:nth-child(3), .feature-label:nth-child(4) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="intellio-header-area" id="sticky-header">
+  <div class="auto-container">
+    <div class="row">
+      <div class="header-logo">
+        <a href="#"><img src="https://via.placeholder.com/120x40/FF6B6B/FFFFFF?text=INTELLIO" alt="logo"></a>
+      </div>
+      <div class="header-menu">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="header-right-wrapper">
+        <div class="header-btn">
+          <a href="#trial">Free Consultation →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-section" id="home">
+  <div class="particle-container">
+    <canvas id="marketingCanvas"></canvas>
+  </div>
+  
+  <div class="marketing-features">
+    <div class="feature-label">📊 Data Analytics</div>
+    <div class="feature-label">🎯 Target Audience</div>
+    <div class="feature-label">📱 Social Media</div>
+    <div class="feature-label">🚀 Growth Hacking</div>
+  </div>
+  
+  <div class="content-wrapper">
+    <h1>Digital Marketing Excellence</h1>
+    <p>Transform your brand with data-driven marketing strategies. Watch your reach expand through our intelligent funnel system that converts visitors into loyal customers.</p>
+    <a href="#explore" class="cta-button">Boost Your Brand</a>
+  </div>
+</div>
+
+<div class="content-section" id="services">
+  <h2 class="section-title">Our Marketing Services</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>SEO Optimization</h3>
+      <p>Rank higher on search engines with AI-powered SEO strategies and content optimization.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Social Media Marketing</h3>
+      <p>Engage your audience across all platforms with data-driven social media campaigns.</p>
+    </div>
+    <div class="feature-card">
+      <h3>PPC Advertising</h3>
+      <p>Maximize ROI with targeted pay-per-click campaigns and conversion optimization.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Content Marketing</h3>
+      <p>Create compelling content that resonates with your audience and drives engagement.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Email Marketing</h3>
+      <p>Build lasting relationships with personalized email campaigns and automation.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Analytics & Reporting</h3>
+      <p>Track performance with comprehensive analytics and actionable insights.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+class MarketingFunnelAnimation {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.dataPoints = [];
+    this.funnelStages = [];
+    this.connections = [];
+    this.mouse = { x: null, y: null, radius: 120 };
+    
+    this.init();
+    this.setupEventListeners();
+    this.animate();
+  }
+  
+  init() {
+    this.resizeCanvas();
+    this.createFunnelStages();
+    this.createDataPoints();
+  }
+  
+  resizeCanvas() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  
+  createFunnelStages() {
+    const stages = ['AWARENESS', 'INTEREST', 'CONSIDERATION', 'CONVERSION'];
+    const colors = ['#FF6B6B', '#FF8E53', '#FFA94D', '#FFD93D'];
+    
+    this.funnelStages = stages.map((name, i) => ({
+      name,
+      y: (this.canvas.height / 5) * (i + 1),
+      width: this.canvas.width * (0.8 - i * 0.15),
+      color: colors[i],
+      alpha: 0.15
+    }));
+  }
+  
+  createDataPoints() {
+    const pointCount = window.innerWidth < 768 ? 40 : 80;
+    this.dataPoints = [];
+    
+    for (let i = 0; i < pointCount; i++) {
+      this.dataPoints.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height * 0.3,
+        targetStage: Math.floor(Math.random() * 4),
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: Math.random() * 0.5 + 0.3,
+        radius: Math.random() * 2 + 1,
+        color: ['#FF6B6B', '#FF8E53', '#FFA94D', '#FFD93D'][Math.floor(Math.random() * 4)],
+        progress: Math.random(),
+        type: Math.random() > 0.7 ? 'lead' : 'visitor'
+      });
+    }
+  }
+  
+  setupEventListeners() {
+    window.addEventListener('resize', () => {
+      this.resizeCanvas();
+      this.createFunnelStages();
+      this.createDataPoints();
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.x;
+      this.mouse.y = e.y;
+    });
+  }
+  
+  drawFunnel() {
+    this.funnelStages.forEach((stage, i) => {
+      const centerX = this.canvas.width / 2;
+      const halfWidth = stage.width / 2;
+      
+      const gradient = this.ctx.createLinearGradient(
+        centerX - halfWidth, stage.y,
+        centerX + halfWidth, stage.y
+      );
+      gradient.addColorStop(0, stage.color + '00');
+      gradient.addColorStop(0.5, stage.color + Math.floor(stage.alpha * 255).toString(16).padStart(2, '0'));
+      gradient.addColorStop(1, stage.color + '00');
+      
+      this.ctx.strokeStyle = stage.color + '40';
+      this.ctx.lineWidth = 2;
+      this.ctx.beginPath();
+      this.ctx.moveTo(centerX - halfWidth, stage.y);
+      this.ctx.lineTo(centerX + halfWidth, stage.y);
+      this.ctx.stroke();
+      
+      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      this.ctx.font = 'bold 12px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.fillText(stage.name, centerX, stage.y - 10);
+    });
+  }
+  
+  drawDataPoint(point) {
+    const gradient = this.ctx.createRadialGradient(
+      point.x, point.y, 0,
+      point.x, point.y, point.radius * 4
+    );
+    gradient.addColorStop(0, point.color + 'CC');
+    gradient.addColorStop(1, point.color + '00');
+    
+    this.ctx.fillStyle = gradient;
+    this.ctx.beginPath();
+    this.ctx.arc(point.x, point.y, point.radius * 4, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    this.ctx.fillStyle = point.color;
+    this.ctx.beginPath();
+    this.ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    if (point.type === 'lead') {
+      this.ctx.strokeStyle = point.color + '99';
+      this.ctx.lineWidth = 1.5;
+      this.ctx.beginPath();
+      this.ctx.arc(point.x, point.y, point.radius * 2.5, 0, Math.PI * 2);
+      this.ctx.stroke();
+    }
+  }
+  
+  drawConnections() {
+    for (let i = 0; i < this.dataPoints.length; i++) {
+      for (let j = i + 1; j < this.dataPoints.length; j++) {
+        const dx = this.dataPoints[i].x - this.dataPoints[j].x;
+        const dy = this.dataPoints[i].y - this.dataPoints[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const maxDistance = 100;
+        
+        if (distance < maxDistance) {
+          const opacity = (1 - distance / maxDistance) * 0.2;
+          this.ctx.strokeStyle = `rgba(255, 142, 83, ${opacity})`;
+          this.ctx.lineWidth = 0.5;
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.dataPoints[i].x, this.dataPoints[i].y);
+          this.ctx.lineTo(this.dataPoints[j].x, this.dataPoints[j].y);
+          this.ctx.stroke();
+        }
+      }
+    }
+  }
+  
+  drawMouseEffect() {
+    if (!this.mouse.x || !this.mouse.y) return;
+    
+    this.dataPoints.forEach(point => {
+      const dx = this.mouse.x - point.x;
+      const dy = this.mouse.y - point.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance < this.mouse.radius) {
+        const opacity = (1 - distance / this.mouse.radius) * 0.4;
+        this.ctx.strokeStyle = `rgba(255, 211, 61, ${opacity})`;
+        this.ctx.lineWidth = 1.5;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.mouse.x, this.mouse.y);
+        this.ctx.lineTo(point.x, point.y);
+        this.ctx.stroke();
+        
+        const force = (this.mouse.radius - distance) / this.mouse.radius;
+        point.vx += (dx / distance) * force * 0.15;
+        point.vy += (dy / distance) * force * 0.15;
+      }
+    });
+  }
+  
+  updateDataPoints() {
+    this.dataPoints.forEach(point => {
+      point.x += point.vx;
+      point.y += point.vy;
+      
+      const targetStage = this.funnelStages[point.targetStage];
+      const centerX = this.canvas.width / 2;
+      const attractionForce = 0.02;
+      
+      if (point.y > targetStage.y - 50 && point.y < targetStage.y + 50) {
+        point.vx += (centerX - point.x) * attractionForce;
+      }
+      
+      if (point.x < 0 || point.x > this.canvas.width) {
+        point.vx *= -0.8;
+        point.x = Math.max(0, Math.min(this.canvas.width, point.x));
+      }
+      
+      if (point.y > this.canvas.height) {
+        point.y = 0;
+        point.x = Math.random() * this.canvas.width;
+        point.targetStage = Math.floor(Math.random() * 4);
+      }
+      
+      point.vx *= 0.98;
+      point.vy *= 0.99;
+    });
+  }
+  
+  animate() {
+    this.ctx.fillStyle = 'rgba(10, 14, 39, 0.15)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.drawFunnel();
+    this.drawConnections();
+    this.dataPoints.forEach(p => this.drawDataPoint(p));
+    this.drawMouseEffect();
+    this.updateDataPoints();
+    
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  new MarketingFunnelAnimation('marketingCanvas');
+  
+  const header = document.getElementById('sticky-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('sticky', window.scrollY > 100);
+  });
+});
+</script>
+
+</body>
+</html>

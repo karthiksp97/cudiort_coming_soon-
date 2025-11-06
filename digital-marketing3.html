@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intellio - Digital Marketing Services</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #0a0e27;
+  overflow-x: hidden;
+}
+
+.particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.intellio-header-area {
+  position: relative;
+  z-index: 999;
+  padding: 20px 0;
+}
+
+.intellio-header-area.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(10px);
+  animation: slideInDown 0.5s ease;
+  box-shadow: 0 2px 20px rgba(103, 102, 255, 0.3);
+}
+
+@keyframes slideInDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+.auto-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo img {
+  height: 40px;
+}
+
+.header-menu ul {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.header-menu ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.header-menu ul li a:hover {
+  color: #6766FF;
+}
+
+.header-right-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-btn a {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #6766FF;
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.header-btn a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(103, 102, 255, 0.4);
+}
+
+.demo-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 20px 60px;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+}
+
+.content-wrapper h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.content-wrapper p {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: #a0aec0;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 18px 45px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+}
+
+.marketing-features {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.feature-label {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 10px 20px;
+  background: rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(102, 126, 234, 0.4);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  animation: float 3s ease-in-out infinite;
+}
+
+.feature-label:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+.feature-label:nth-child(2) { top: 25%; right: 15%; animation-delay: 1s; }
+.feature-label:nth-child(3) { bottom: 25%; left: 15%; animation-delay: 2s; }
+.feature-label:nth-child(4) { bottom: 35%; right: 10%; animation-delay: 1.5s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+.content-section {
+  position: relative;
+  z-index: 10;
+  background: #0a0e27;
+  padding: 80px 20px;
+}
+
+.section-title {
+  text-align: center;
+  color: #fff;
+  font-size: 2.5rem;
+  margin-bottom: 60px;
+  font-weight: 700;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: linear-gradient(145deg, rgba(15, 9, 39, 0.9), rgba(33, 27, 57, 0.9));
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(103, 102, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-color: #6766FF;
+  box-shadow: 0 20px 40px rgba(103, 102, 255, 0.3);
+}
+
+.feature-card h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .header-menu { display: none; }
+  .feature-label { font-size: 10px; padding: 6px 12px; }
+  .feature-label:nth-child(3), .feature-label:nth-child(4) { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="intellio-header-area" id="sticky-header">
+  <div class="auto-container">
+    <div class="row">
+      <div class="header-logo">
+        <a href="#"><img src="https://via.placeholder.com/120x40/6766FF/FFFFFF?text=INTELLIO" alt="logo"></a>
+      </div>
+      <div class="header-menu">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="header-right-wrapper">
+        <div class="header-btn">
+          <a href="#trial">Free Consultation →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-section" id="home">
+  <div class="particle-container">
+    <canvas id="marketingCanvas"></canvas>
+  </div>
+  
+  <div class="marketing-features">
+    <div class="feature-label">📊 Data Analytics</div>
+    <div class="feature-label">🎯 Target Reach</div>
+    <div class="feature-label">📱 Social Growth</div>
+    <div class="feature-label">🚀 Viral Spread</div>
+  </div>
+  
+  <div class="content-wrapper">
+    <h1>Digital Marketing Excellence</h1>
+    <p>Watch your brand reach expand across digital channels. Our network visualization shows how your content spreads virally, reaching and engaging your target audience through multiple touchpoints.</p>
+    <a href="#explore" class="cta-button">Boost Your Brand</a>
+  </div>
+</div>
+
+<div class="content-section" id="services">
+  <h2 class="section-title">Our Marketing Services</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>SEO Optimization</h3>
+      <p>Rank higher on search engines with AI-powered SEO strategies and content optimization.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Social Media Marketing</h3>
+      <p>Engage your audience across all platforms with data-driven social media campaigns.</p>
+    </div>
+    <div class="feature-card">
+      <h3>PPC Advertising</h3>
+      <p>Maximize ROI with targeted pay-per-click campaigns and conversion optimization.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Content Marketing</h3>
+      <p>Create compelling content that resonates with your audience and drives engagement.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Email Marketing</h3>
+      <p>Build lasting relationships with personalized email campaigns and automation.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Analytics & Reporting</h3>
+      <p>Track performance with comprehensive analytics and actionable insights.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+class ViralSpreadAnimation {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.brandNode = null;
+    this.audienceNodes = [];
+    this.contentWaves = [];
+    this.connections = [];
+    this.engagementParticles = [];
+    this.mouse = { x: null, y: null, radius: 150 };
+    
+    this.init();
+    this.setupEventListeners();
+    this.animate();
+  }
+  
+  init() {
+    this.resizeCanvas();
+    this.createBrandNode();
+    this.createAudienceNodes();
+  }
+  
+  resizeCanvas() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  
+  createBrandNode() {
+    this.brandNode = {
+      x: this.canvas.width / 2,
+      y: this.canvas.height / 2,
+      radius: 25,
+      color: '#6766FF',
+      pulsePhase: 0,
+      label: 'YOUR BRAND'
+    };
+  }
+  
+  createAudienceNodes() {
+    const nodeCount = window.innerWidth < 768 ? 25 : 50;
+    this.audienceNodes = [];
+    
+    for (let i = 0; i < nodeCount; i++) {
+      const angle = (i / nodeCount) * Math.PI * 2;
+      const distance = 150 + Math.random() * 250;
+      const tier = Math.floor(Math.random() * 3);
+      
+      this.audienceNodes.push({
+        x: this.canvas.width / 2 + Math.cos(angle) * distance,
+        y: this.canvas.height / 2 + Math.sin(angle) * distance,
+        baseX: this.canvas.width / 2 + Math.cos(angle) * distance,
+        baseY: this.canvas.height / 2 + Math.sin(angle) * distance,
+        radius: 4 + Math.random() * 3,
+        color: tier === 0 ? '#667eea' : tier === 1 ? '#764ba2' : '#48dbfb',
+        active: false,
+        activationTime: 0,
+        tier: tier,
+        connections: [],
+        engagementLevel: 0
+      });
+    }
+  }
+  
+  setupEventListeners() {
+    window.addEventListener('resize', () => {
+      this.resizeCanvas();
+      this.createBrandNode();
+      this.createAudienceNodes();
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.x;
+      this.mouse.y = e.y;
+    });
+    
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        this.mouse.x = e.touches[0].clientX;
+        this.mouse.y = e.touches[0].clientY;
+      }
+    });
+  }
+  
+  drawBrandNode() {
+    const pulse = Math.sin(this.brandNode.pulsePhase) * 0.3 + 1;
+    
+    const outerGradient = this.ctx.createRadialGradient(
+      this.brandNode.x, this.brandNode.y, 0,
+      this.brandNode.x, this.brandNode.y, this.brandNode.radius * pulse * 3
+    );
+    outerGradient.addColorStop(0, this.brandNode.color + 'CC');
+    outerGradient.addColorStop(0.5, this.brandNode.color + '44');
+    outerGradient.addColorStop(1, this.brandNode.color + '00');
+    
+    this.ctx.fillStyle = outerGradient;
+    this.ctx.beginPath();
+    this.ctx.arc(this.brandNode.x, this.brandNode.y, this.brandNode.radius * pulse * 3, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    const gradient = this.ctx.createRadialGradient(
+      this.brandNode.x, this.brandNode.y, 0,
+      this.brandNode.x, this.brandNode.y, this.brandNode.radius
+    );
+    gradient.addColorStop(0, '#ffffff');
+    gradient.addColorStop(0.5, this.brandNode.color);
+    gradient.addColorStop(1, '#764ba2');
+    
+    this.ctx.fillStyle = gradient;
+    this.ctx.beginPath();
+    this.ctx.arc(this.brandNode.x, this.brandNode.y, this.brandNode.radius, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    this.ctx.strokeStyle = '#ffffff66';
+    this.ctx.lineWidth = 2;
+    this.ctx.beginPath();
+    this.ctx.arc(this.brandNode.x, this.brandNode.y, this.brandNode.radius + 5, 0, Math.PI * 2);
+    this.ctx.stroke();
+    
+    this.brandNode.pulsePhase += 0.05;
+  }
+  
+  activateNodes() {
+    const now = Date.now();
+    
+    this.audienceNodes.forEach((node, index) => {
+      if (!node.active && Math.random() > 0.99) {
+        node.active = true;
+        node.activationTime = now;
+        
+        this.createContentWave(this.brandNode.x, this.brandNode.y, node.x, node.y);
+        
+        const nearbyNodes = this.audienceNodes.filter((n, i) => {
+          if (i === index || !n.active) return false;
+          const dx = n.x - node.x;
+          const dy = n.y - node.y;
+          return Math.sqrt(dx * dx + dy * dy) < 150;
+        });
+        
+        if (nearbyNodes.length > 0 && Math.random() > 0.7) {
+          const targetNode = nearbyNodes[Math.floor(Math.random() * nearbyNodes.length)];
+          this.createEngagementParticle(node.x, node.y, targetNode.x, targetNode.y);
+        }
+      }
+      
+      if (node.active) {
+        node.engagementLevel = Math.min(1, (now - node.activationTime) / 2000);
+      }
+    });
+  }
+  
+  createContentWave(startX, startY, endX, endY) {
+    this.contentWaves.push({
+      startX, startY, endX, endY,
+      progress: 0,
+      speed: 0.02,
+      color: '#667eea'
+    });
+  }
+  
+  createEngagementParticle(startX, startY, endX, endY) {
+    this.engagementParticles.push({
+      startX, startY, endX, endY,
+      progress: 0,
+      speed: 0.03,
+      color: '#48dbfb'
+    });
+  }
+  
+  drawContentWaves() {
+    this.contentWaves = this.contentWaves.filter(wave => {
+      wave.progress += wave.speed;
+      
+      if (wave.progress > 1) return false;
+      
+      const x = wave.startX + (wave.endX - wave.startX) * wave.progress;
+      const y = wave.startY + (wave.endY - wave.startY) * wave.progress;
+      
+      this.ctx.strokeStyle = wave.color + '88';
+      this.ctx.lineWidth = 2;
+      this.ctx.beginPath();
+      this.ctx.moveTo(wave.startX, wave.startY);
+      this.ctx.lineTo(x, y);
+      this.ctx.stroke();
+      
+      const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, 8);
+      gradient.addColorStop(0, wave.color + 'FF');
+      gradient.addColorStop(1, wave.color + '00');
+      
+      this.ctx.fillStyle = gradient;
+      this.ctx.beginPath();
+      this.ctx.arc(x, y, 8, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      return true;
+    });
+  }
+  
+  drawEngagementParticles() {
+    this.engagementParticles = this.engagementParticles.filter(particle => {
+      particle.progress += particle.speed;
+      
+      if (particle.progress > 1) return false;
+      
+      const x = particle.startX + (particle.endX - particle.startX) * particle.progress;
+      const y = particle.startY + (particle.endY - particle.startY) * particle.progress;
+      
+      const alpha = Math.sin(particle.progress * Math.PI);
+      this.ctx.fillStyle = particle.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+      this.ctx.beginPath();
+      this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      return true;
+    });
+  }
+  
+  drawAudienceNodes() {
+    this.audienceNodes.forEach(node => {
+      const dx = this.brandNode.x - node.x;
+      const dy = this.brandNode.y - node.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (node.active && distance < 500) {
+        const opacity = (1 - distance / 500) * 0.15 * node.engagementLevel;
+        this.ctx.strokeStyle = node.color + Math.floor(opacity * 255).toString(16).padStart(2, '0');
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.brandNode.x, this.brandNode.y);
+        this.ctx.lineTo(node.x, node.y);
+        this.ctx.stroke();
+      }
+      
+      const hoverDistance = this.mouse.x && this.mouse.y ? 
+        Math.sqrt(Math.pow(this.mouse.x - node.x, 2) + Math.pow(this.mouse.y - node.y, 2)) : 999;
+      
+      if (hoverDistance < 80) {
+        node.x += (this.mouse.x - node.x) * 0.05;
+        node.y += (this.mouse.y - node.y) * 0.05;
+      } else {
+        node.x += (node.baseX - node.x) * 0.05;
+        node.y += (node.baseY - node.y) * 0.05;
+      }
+      
+      const size = node.active ? node.radius * (1 + node.engagementLevel * 0.5) : node.radius;
+      
+      const gradient = this.ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, size * 2);
+      gradient.addColorStop(0, node.color + (node.active ? 'CC' : '88'));
+      gradient.addColorStop(1, node.color + '00');
+      
+      this.ctx.fillStyle = gradient;
+      this.ctx.beginPath();
+      this.ctx.arc(node.x, node.y, size * 2, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      this.ctx.fillStyle = node.active ? node.color : node.color + '99';
+      this.ctx.beginPath();
+      this.ctx.arc(node.x, node.y, size, 0, Math.PI * 2);
+      this.ctx.fill();
+      
+      if (node.active && node.engagementLevel > 0.5) {
+        this.ctx.strokeStyle = '#ffffff88';
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.arc(node.x, node.y, size + 3, 0, Math.PI * 2);
+        this.ctx.stroke();
+      }
+    });
+  }
+  
+  drawNetworkConnections() {
+    for (let i = 0; i < this.audienceNodes.length; i++) {
+      if (!this.audienceNodes[i].active) continue;
+      
+      for (let j = i + 1; j < this.audienceNodes.length; j++) {
+        if (!this.audienceNodes[j].active) continue;
+        
+        const dx = this.audienceNodes[i].x - this.audienceNodes[j].x;
+        const dy = this.audienceNodes[i].y - this.audienceNodes[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 120) {
+          const opacity = (1 - distance / 120) * 0.1;
+          this.ctx.strokeStyle = `rgba(72, 219, 251, ${opacity})`;
+          this.ctx.lineWidth = 0.5;
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.audienceNodes[i].x, this.audienceNodes[i].y);
+          this.ctx.lineTo(this.audienceNodes[j].x, this.audienceNodes[j].y);
+          this.ctx.stroke();
+        }
+      }
+    }
+  }
+  
+  animate() {
+    this.ctx.fillStyle = 'rgba(10, 14, 39, 0.1)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.activateNodes();
+    this.drawNetworkConnections();
+    this.drawContentWaves();
+    this.drawEngagementParticles();
+    this.drawAudienceNodes();
+    this.drawBrandNode();
+    
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  new ViralSpreadAnimation('marketingCanvas');
+  
+  const header = document.getElementById('sticky-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('sticky', window.scrollY > 100);
+  });
+});
+</script>
+
+</body>
+</html>

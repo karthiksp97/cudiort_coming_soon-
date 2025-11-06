@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intellio - Design & Video Editing</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #0a0e27;
+  overflow-x: hidden;
+}
+
+.particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.intellio-header-area {
+  position: relative;
+  z-index: 999;
+  padding: 20px 0;
+}
+
+.intellio-header-area.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(10px);
+  animation: slideInDown 0.5s ease;
+  box-shadow: 0 2px 20px rgba(138, 43, 226, 0.3);
+}
+
+@keyframes slideInDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+.auto-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo img {
+  height: 40px;
+}
+
+.header-menu ul {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.header-menu ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.header-menu ul li a:hover {
+  color: #BA55D3;
+}
+
+.header-right-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-btn a {
+  display: inline-block;
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #8A2BE2 0%, #BA55D3 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.header-btn a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(138, 43, 226, 0.4);
+}
+
+.demo-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 20px 60px;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+  /* Removed the glass background */
+}
+
+.content-wrapper h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.content-wrapper p {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: #ffffff;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 18px 45px;
+  background: linear-gradient(135deg, #8A2BE2 0%, #BA55D3 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(138, 43, 226, 0.3);
+  position: relative;
+  z-index: 5;
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(138, 43, 226, 0.5);
+}
+
+.creative-features {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.feature-label {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 10px 20px;
+  background: rgba(138, 43, 226, 0.15);
+  border: 1px solid rgba(138, 43, 226, 0.4);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  animation: float 3s ease-in-out infinite;
+}
+
+.feature-label:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+.feature-label:nth-child(2) { top: 25%; right: 15%; animation-delay: 1s; }
+.feature-label:nth-child(3) { bottom: 25%; left: 15%; animation-delay: 2s; }
+.feature-label:nth-child(4) { bottom: 35%; right: 10%; animation-delay: 1.5s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+.content-section {
+  position: relative;
+  z-index: 10;
+  background: #0a0e27;
+  padding: 80px 20px;
+}
+
+.section-title {
+  text-align: center;
+  color: #fff;
+  font-size: 2.5rem;
+  margin-bottom: 60px;
+  font-weight: 700;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: linear-gradient(145deg, rgba(15, 9, 39, 0.9), rgba(33, 27, 57, 0.9));
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-color: #BA55D3;
+  box-shadow: 0 20px 40px rgba(138, 43, 226, 0.3);
+}
+
+.feature-card h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .header-menu { display: none; }
+  .feature-label { font-size: 10px; padding: 6px 12px; }
+  .feature-label:nth-child(3), .feature-label:nth-child(4) { display: none; }
+  .content-wrapper {
+    padding: 30px 20px;
+    margin: 0 15px;
+  }
+}
+
+/* Text highlight effect - removed the underline */
+.text-highlight {
+  position: relative;
+  display: inline-block;
+}
+</style>
+</head>
+<body>
+
+<div class="intellio-header-area" id="sticky-header">
+  <div class="auto-container">
+    <div class="row">
+      <div class="header-logo">
+        <a href="#"><img src="https://via.placeholder.com/120x40/8A2BE2/FFFFFF?text=INTELLIO" alt="logo"></a>
+      </div>
+      <div class="header-menu">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="header-right-wrapper">
+        <div class="header-btn">
+          <a href="#trial">View Portfolio →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-section" id="home">
+  <div class="particle-container">
+    <canvas id="creativeCanvas"></canvas>
+  </div>
+  
+  <div class="creative-features">
+    <div class="feature-label">🎨 Creative Design</div>
+    <div class="feature-label">🎬 Video Editing</div>
+    <div class="feature-label">✨ Motion Graphics</div>
+    <div class="feature-label">🖌️ Brand Identity</div>
+  </div>
+  
+  <div class="content-wrapper">
+    <h1><span class="text-highlight">Creative Design</span> Studio</h1>
+    <p>Bring your vision to life with stunning designs and cinematic video editing. Our creative toolkit transforms ideas into visual masterpieces that captivate and inspire.</p>
+    <a href="#explore" class="cta-button">Start Creating</a>
+  </div>
+</div>
+
+<div class="content-section" id="services">
+  <h2 class="section-title">Our Creative Services</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>Graphic Design</h3>
+      <p>Eye-catching visuals and brand materials that make your business stand out.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Video Production</h3>
+      <p>Professional video editing with AI-enhanced effects and seamless transitions.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Motion Graphics</h3>
+      <p>Dynamic animations and visual effects that bring your content to life.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Brand Identity</h3>
+      <p>Complete branding solutions including logos, color schemes, and style guides.</p>
+    </div>
+    <div class="feature-card">
+      <h3>UI/UX Design</h3>
+      <p>Intuitive interfaces and user experiences that delight and engage.</p>
+    </div>
+    <div class="feature-card">
+      <h3>3D Visualization</h3>
+      <p>Stunning 3D renders and visualizations for products and architecture.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+class CreativeToolsAnimation {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.tools = [];
+    this.brushStrokes = [];
+    this.colorPalette = [
+      '#8A2BE2', '#BA55D3', '#FF1493', '#00CED1', 
+      '#FFD700', '#FF6347', '#32CD32', '#FF69B4'
+    ];
+    this.mouse = { x: null, y: null, radius: 150 };
+    
+    this.init();
+    this.setupEventListeners();
+    this.animate();
+  }
+  
+  init() {
+    this.resizeCanvas();
+    this.createTools();
+    this.createBrushStrokes();
+  }
+  
+  resizeCanvas() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  
+  createTools() {
+    // Reduced number of particles for better text visibility
+    const toolCount = window.innerWidth < 768 ? 12 : 20;
+    const toolShapes = ['circle', 'square', 'triangle', 'pentagon', 'star'];
+    
+    this.tools = [];
+    for (let i = 0; i < toolCount; i++) {
+      this.tools.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+        size: Math.random() * 10 + 5, // Smaller size
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.02,
+        color: this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)],
+        shape: toolShapes[Math.floor(Math.random() * toolShapes.length)],
+        alpha: Math.random() * 0.3 + 0.2, // Lower opacity
+        pulsePhase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+  
+  createBrushStrokes() {
+    this.brushStrokes = [];
+    // Reduced number of brush strokes
+    for (let i = 0; i < 8; i++) {
+      const points = [];
+      const startX = Math.random() * this.canvas.width;
+      const startY = Math.random() * this.canvas.height;
+      
+      for (let j = 0; j < 15; j++) {
+        points.push({
+          x: startX + Math.sin(j * 0.3) * 50,
+          y: startY + j * 10
+        });
+      }
+      
+      this.brushStrokes.push({
+        points,
+        color: this.colorPalette[Math.floor(Math.random() * this.colorPalette.length)],
+        width: Math.random() * 2 + 1, // Thinner strokes
+        alpha: Math.random() * 0.15 + 0.05, // Lower opacity
+        offset: Math.random() * 1000
+      });
+    }
+  }
+  
+  setupEventListeners() {
+    window.addEventListener('resize', () => {
+      this.resizeCanvas();
+      this.createTools();
+      this.createBrushStrokes();
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.x;
+      this.mouse.y = e.y;
+    });
+    
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        this.mouse.x = e.touches[0].clientX;
+        this.mouse.y = e.touches[0].clientY;
+      }
+    });
+    
+    window.addEventListener('touchend', () => {
+      this.mouse.x = null;
+      this.mouse.y = null;
+    });
+  }
+  
+  drawShape(tool) {
+    this.ctx.save();
+    this.ctx.translate(tool.x, tool.y);
+    this.ctx.rotate(tool.rotation);
+    
+    const pulse = Math.sin(Date.now() * 0.002 + tool.pulsePhase) * 0.2 + 1;
+    const size = tool.size * pulse;
+    
+    // Reduced glow effect
+    const gradient = this.ctx.createRadialGradient(0, 0, 0, 0, 0, size * 1.5);
+    gradient.addColorStop(0, tool.color + '88'); // More transparent
+    gradient.addColorStop(1, tool.color + '00');
+    
+    this.ctx.fillStyle = gradient;
+    this.ctx.beginPath();
+    this.ctx.arc(0, 0, size * 1.5, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    this.ctx.fillStyle = tool.color;
+    this.ctx.globalAlpha = tool.alpha;
+    
+    this.ctx.beginPath();
+    switch(tool.shape) {
+      case 'circle':
+        this.ctx.arc(0, 0, size, 0, Math.PI * 2);
+        break;
+      case 'square':
+        this.ctx.rect(-size, -size, size * 2, size * 2);
+        break;
+      case 'triangle':
+        this.ctx.moveTo(0, -size);
+        this.ctx.lineTo(size, size);
+        this.ctx.lineTo(-size, size);
+        this.ctx.closePath();
+        break;
+      case 'pentagon':
+        for (let i = 0; i < 5; i++) {
+          const angle = (i * 2 * Math.PI / 5) - Math.PI / 2;
+          const x = Math.cos(angle) * size;
+          const y = Math.sin(angle) * size;
+          if (i === 0) this.ctx.moveTo(x, y);
+          else this.ctx.lineTo(x, y);
+        }
+        this.ctx.closePath();
+        break;
+      case 'star':
+        for (let i = 0; i < 10; i++) {
+          const angle = (i * Math.PI / 5) - Math.PI / 2;
+          const radius = i % 2 === 0 ? size : size * 0.5;
+          const x = Math.cos(angle) * radius;
+          const y = Math.sin(angle) * radius;
+          if (i === 0) this.ctx.moveTo(x, y);
+          else this.ctx.lineTo(x, y);
+        }
+        this.ctx.closePath();
+        break;
+    }
+    this.ctx.fill();
+    
+    this.ctx.globalAlpha = 1;
+    this.ctx.restore();
+  }
+  
+  drawBrushStrokes() {
+    this.brushStrokes.forEach(stroke => {
+      this.ctx.strokeStyle = stroke.color;
+      this.ctx.lineWidth = stroke.width;
+      this.ctx.globalAlpha = stroke.alpha;
+      this.ctx.lineCap = 'round';
+      this.ctx.lineJoin = 'round';
+      
+      this.ctx.beginPath();
+      stroke.points.forEach((point, i) => {
+        const wave = Math.sin((Date.now() * 0.001 + stroke.offset + i * 0.1)) * 5;
+        if (i === 0) {
+          this.ctx.moveTo(point.x + wave, point.y);
+        } else {
+          this.ctx.lineTo(point.x + wave, point.y);
+        }
+      });
+      this.ctx.stroke();
+    });
+    this.ctx.globalAlpha = 1;
+  }
+  
+  drawConnections() {
+    // Reduced connection opacity and frequency
+    for (let i = 0; i < this.tools.length; i++) {
+      for (let j = i + 1; j < this.tools.length; j++) {
+        const dx = this.tools[i].x - this.tools[j].x;
+        const dy = this.tools[i].y - this.tools[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const maxDistance = 100; // Shorter connections
+        
+        if (distance < maxDistance) {
+          const opacity = (1 - distance / maxDistance) * 0.08; // Lower opacity
+          const gradient = this.ctx.createLinearGradient(
+            this.tools[i].x, this.tools[i].y,
+            this.tools[j].x, this.tools[j].y
+          );
+          gradient.addColorStop(0, this.tools[i].color + Math.floor(opacity * 255).toString(16).padStart(2, '0'));
+          gradient.addColorStop(1, this.tools[j].color + Math.floor(opacity * 255).toString(16).padStart(2, '0'));
+          
+          this.ctx.strokeStyle = gradient;
+          this.ctx.lineWidth = 0.5; // Thinner lines
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.tools[i].x, this.tools[i].y);
+          this.ctx.lineTo(this.tools[j].x, this.tools[j].y);
+          this.ctx.stroke();
+        }
+      }
+    }
+  }
+  
+  drawMouseInteraction() {
+    if (!this.mouse.x || !this.mouse.y) return;
+    
+    // Reduced mouse interaction effect
+    const gradient = this.ctx.createRadialGradient(
+      this.mouse.x, this.mouse.y, 0,
+      this.mouse.x, this.mouse.y, this.mouse.radius
+    );
+    gradient.addColorStop(0, 'rgba(186, 85, 211, 0.05)'); // More subtle
+    gradient.addColorStop(1, 'rgba(186, 85, 211, 0)');
+    
+    this.ctx.fillStyle = gradient;
+    this.ctx.beginPath();
+    this.ctx.arc(this.mouse.x, this.mouse.y, this.mouse.radius, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    this.tools.forEach(tool => {
+      const dx = this.mouse.x - tool.x;
+      const dy = this.mouse.y - tool.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance < this.mouse.radius) {
+        const opacity = (1 - distance / this.mouse.radius) * 0.2; // Lower opacity
+        this.ctx.strokeStyle = `rgba(255, 215, 0, ${opacity})`;
+        this.ctx.lineWidth = 1; // Thinner lines
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.mouse.x, this.mouse.y);
+        this.ctx.lineTo(tool.x, tool.y);
+        this.ctx.stroke();
+        
+        const force = (this.mouse.radius - distance) / this.mouse.radius;
+        tool.vx += (dx / distance) * force * 0.1; // Reduced force
+        tool.vy += (dy / distance) * force * 0.1;
+        tool.rotationSpeed += force * 0.005; // Reduced rotation
+      }
+    });
+  }
+  
+  updateTools() {
+    this.tools.forEach(tool => {
+      tool.x += tool.vx;
+      tool.y += tool.vy;
+      tool.rotation += tool.rotationSpeed;
+      
+      if (tool.x < 0 || tool.x > this.canvas.width) {
+        tool.vx *= -0.8;
+        tool.x = Math.max(0, Math.min(this.canvas.width, tool.x));
+      }
+      if (tool.y < 0 || tool.y > this.canvas.height) {
+        tool.vy *= -0.8;
+        tool.y = Math.max(0, Math.min(this.canvas.height, tool.y));
+      }
+      
+      tool.vx *= 0.99;
+      tool.vy *= 0.99;
+      tool.rotationSpeed *= 0.98;
+      
+      tool.vx += (Math.random() - 0.5) * 0.03; // Reduced random movement
+      tool.vy += (Math.random() - 0.5) * 0.03;
+    });
+  }
+  
+  animate() {
+    // Increased background opacity for better text contrast
+    this.ctx.fillStyle = 'rgba(10, 14, 39, 0.2)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.drawBrushStrokes();
+    this.drawConnections();
+    this.tools.forEach(tool => this.drawShape(tool));
+    this.drawMouseInteraction();
+    this.updateTools();
+    
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  new CreativeToolsAnimation('creativeCanvas');
+  
+  const header = document.getElementById('sticky-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('sticky', window.scrollY > 100);
+  });
+});
+</script>
+
+</body>
+</html>

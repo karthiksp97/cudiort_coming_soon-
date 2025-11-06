@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intellio - AI Agency with Particles</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #0a0e27;
+  overflow-x: hidden;
+}
+
+/* Particle Canvas */
+.particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Header Styles */
+.intellio-header-area {
+  position: relative;
+  z-index: 999;
+  padding: 20px 0;
+}
+
+.intellio-header-area.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(10px);
+  animation: slideInDown 0.5s ease;
+  box-shadow: 0 2px 20px rgba(103, 102, 255, 0.3);
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.auto-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo img {
+  height: 40px;
+}
+
+.header-menu ul {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.header-menu ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.header-menu ul li a:hover {
+  color: #6766FF;
+}
+
+.header-right-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-btn a {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #6766FF;
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.header-btn a:hover {
+  background: #5555EE;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(103, 102, 255, 0.4);
+}
+
+.header-btn a i {
+  margin-left: 8px;
+}
+
+/* Banner Section */
+.demo-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 20px 60px;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+}
+
+.content-wrapper h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: #fff;
+  margin-bottom: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.content-wrapper p {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: #a0aec0;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 18px 45px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 18px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+}
+
+/* Feature labels */
+.ai-features {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.feature-label {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 10px 20px;
+  background: rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(102, 126, 234, 0.4);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  animation: float 3s ease-in-out infinite;
+}
+
+.feature-label:nth-child(1) {
+  top: 15%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.feature-label:nth-child(2) {
+  top: 25%;
+  right: 15%;
+  animation-delay: 1s;
+}
+
+.feature-label:nth-child(3) {
+  bottom: 25%;
+  left: 15%;
+  animation-delay: 2s;
+}
+
+.feature-label:nth-child(4) {
+  bottom: 35%;
+  right: 10%;
+  animation-delay: 1.5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Content sections */
+.content-section {
+  position: relative;
+  z-index: 10;
+  background: #0a0e27;
+  padding: 80px 20px;
+}
+
+.section-title {
+  text-align: center;
+  color: #fff;
+  font-size: 2.5rem;
+  margin-bottom: 60px;
+  font-weight: 700;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: linear-gradient(145deg, rgba(15, 9, 39, 0.9), rgba(33, 27, 57, 0.9));
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(103, 102, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-color: #6766FF;
+  box-shadow: 0 20px 40px rgba(103, 102, 255, 0.3);
+}
+
+.feature-card h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .header-menu {
+    display: none;
+  }
+  
+  .feature-label {
+    font-size: 10px;
+    padding: 6px 12px;
+  }
+  
+  .feature-label:nth-child(3),
+  .feature-label:nth-child(4) {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Header Area -->
+<div class="intellio-header-area" id="sticky-header">
+  <div class="auto-container">
+    <div class="row">
+      <div class="header-logo">
+        <a href="#"><img src="https://via.placeholder.com/120x40/6766FF/FFFFFF?text=INTELLIO" alt="logo"></a>
+      </div>
+      <div class="header-menu">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="header-right-wrapper">
+        <div class="header-btn">
+          <a href="#trial">Free Trial <i>→</i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Banner Section with Particles -->
+<div class="demo-section" id="home">
+  <div class="particle-container">
+    <canvas id="neuralCanvas"></canvas>
+  </div>
+  
+  <div class="ai-features">
+    <div class="feature-label">🧠 Neural Networks</div>
+    <div class="feature-label">⚡ Automation</div>
+    <div class="feature-label">🔮 Predictive AI</div>
+    <div class="feature-label">🚀 Innovation</div>
+  </div>
+  
+  <div class="content-wrapper">
+    <h1>AI-Powered Future</h1>
+    <p>Experience the convergence of artificial intelligence and innovation. Our neural network visualization represents the interconnected intelligence driving your business forward.</p>
+    <a href="#explore" class="cta-button">Explore AI Solutions</a>
+  </div>
+</div>
+
+<!-- Content Section -->
+<div class="content-section" id="services">
+  <h2 class="section-title">Our AI Services</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>Machine Learning</h3>
+      <p>Advanced algorithms that learn from data to make intelligent predictions and decisions.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Natural Language Processing</h3>
+      <p>Enable computers to understand, interpret, and generate human language naturally.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Computer Vision</h3>
+      <p>Extract meaningful information from digital images and videos automatically.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// Neural Network Particle System
+class NeuralNetworkParticles {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.particles = [];
+    this.mouse = { x: null, y: null, radius: 150 };
+    this.particleCount = this.isMobile() ? 30 : 60;
+    
+    this.init();
+    this.setupEventListeners();
+    this.animate();
+  }
+  
+  isMobile() {
+    return window.innerWidth < 768;
+  }
+  
+  init() {
+    this.resizeCanvas();
+    this.createParticles();
+  }
+  
+  resizeCanvas() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  
+  createParticles() {
+    this.particles = [];
+    for (let i = 0; i < this.particleCount; i++) {
+      this.particles.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        radius: Math.random() * 2 + 1,
+        color: this.getNodeColor(),
+        pulseSpeed: Math.random() * 0.02 + 0.01,
+        pulsePhase: Math.random() * Math.PI * 2,
+        type: Math.random() > 0.7 ? 'neuron' : 'data'
+      });
+    }
+  }
+  
+  getNodeColor() {
+    const colors = [
+      'rgba(102, 126, 234, ',
+      'rgba(118, 75, 162, ',
+      'rgba(237, 100, 166, ',
+      'rgba(72, 219, 251, '
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+  
+  setupEventListeners() {
+    window.addEventListener('resize', () => {
+      this.resizeCanvas();
+      this.particleCount = this.isMobile() ? 30 : 60;
+      this.createParticles();
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.x;
+      this.mouse.y = e.y;
+    });
+    
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        this.mouse.x = e.touches[0].clientX;
+        this.mouse.y = e.touches[0].clientY;
+      }
+    });
+    
+    window.addEventListener('touchend', () => {
+      this.mouse.x = null;
+      this.mouse.y = null;
+    });
+  }
+  
+  drawParticle(particle) {
+    const pulse = Math.sin(Date.now() * particle.pulseSpeed + particle.pulsePhase);
+    const alpha = 0.4 + pulse * 0.3;
+    
+    // Glow effect
+    const gradient = this.ctx.createRadialGradient(
+      particle.x, particle.y, 0,
+      particle.x, particle.y, particle.radius * 3
+    );
+    gradient.addColorStop(0, particle.color + '0.8)');
+    gradient.addColorStop(1, particle.color + '0)');
+    
+    this.ctx.fillStyle = gradient;
+    this.ctx.beginPath();
+    this.ctx.arc(particle.x, particle.y, particle.radius * 3, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    // Core
+    this.ctx.fillStyle = particle.color + alpha + ')';
+    this.ctx.beginPath();
+    this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    // Neuron type indicator
+    if (particle.type === 'neuron') {
+      this.ctx.strokeStyle = particle.color + '0.6)';
+      this.ctx.lineWidth = 1;
+      this.ctx.beginPath();
+      this.ctx.arc(particle.x, particle.y, particle.radius * 2, 0, Math.PI * 2);
+      this.ctx.stroke();
+    }
+  }
+  
+  drawConnections() {
+    for (let i = 0; i < this.particles.length; i++) {
+      for (let j = i + 1; j < this.particles.length; j++) {
+        const dx = this.particles[i].x - this.particles[j].x;
+        const dy = this.particles[i].y - this.particles[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const maxDistance = this.isMobile() ? 120 : 150;
+        
+        if (distance < maxDistance) {
+          const opacity = (1 - distance / maxDistance) * 0.3;
+          
+          this.ctx.strokeStyle = `rgba(102, 126, 234, ${opacity})`;
+          this.ctx.lineWidth = 0.5;
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+          this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+          this.ctx.stroke();
+          
+          // Signal pulse
+          if (Math.random() > 0.98) {
+            const signalProgress = (Date.now() * 0.001) % 1;
+            const signalX = this.particles[i].x + dx * signalProgress;
+            const signalY = this.particles[i].y + dy * signalProgress;
+            
+            this.ctx.fillStyle = `rgba(72, 219, 251, ${opacity * 2})`;
+            this.ctx.beginPath();
+            this.ctx.arc(signalX, signalY, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+          }
+        }
+      }
+    }
+  }
+  
+  drawMouseInteraction() {
+    if (!this.mouse.x || !this.mouse.y) return;
+    
+    this.particles.forEach(particle => {
+      const dx = this.mouse.x - particle.x;
+      const dy = this.mouse.y - particle.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance < this.mouse.radius) {
+        const opacity = (1 - distance / this.mouse.radius) * 0.5;
+        this.ctx.strokeStyle = `rgba(237, 100, 166, ${opacity})`;
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.mouse.x, this.mouse.y);
+        this.ctx.lineTo(particle.x, particle.y);
+        this.ctx.stroke();
+        
+        const force = (this.mouse.radius - distance) / this.mouse.radius;
+        particle.vx -= (dx / distance) * force * 0.1;
+        particle.vy -= (dy / distance) * force * 0.1;
+      }
+    });
+  }
+  
+  updateParticles() {
+    this.particles.forEach(particle => {
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+      
+      if (particle.x < 0 || particle.x > this.canvas.width) {
+        particle.vx *= -0.8;
+        particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
+      }
+      if (particle.y < 0 || particle.y > this.canvas.height) {
+        particle.vy *= -0.8;
+        particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
+      }
+      
+      particle.vx *= 0.99;
+      particle.vy *= 0.99;
+      
+      particle.vx += (Math.random() - 0.5) * 0.02;
+      particle.vy += (Math.random() - 0.5) * 0.02;
+    });
+  }
+  
+  animate() {
+    this.ctx.fillStyle = 'rgba(10, 14, 39, 0.1)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.drawConnections();
+    this.particles.forEach(p => this.drawParticle(p));
+    this.drawMouseInteraction();
+    this.updateParticles();
+    
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+// Initialize particles
+document.addEventListener('DOMContentLoaded', () => {
+  new NeuralNetworkParticles('neuralCanvas');
+  
+  // Sticky header
+  const header = document.getElementById('sticky-header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 100) {
+      header.classList.add('sticky');
+    } else {
+      header.classList.remove('sticky');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
