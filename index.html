@@ -1,594 +1,1583 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Intellio - AI Agency with Particles</title>
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cudiort - Intellio | Coming Soon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-  font-family: 'Arial', sans-serif;
-  background: #0a0e27;
-  overflow-x: hidden;
-}
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
 
-/* Particle Canvas */
-.particle-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
+        html {
+            scroll-behavior: smooth;
+        }
 
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+        section {
+            min-height: 100vh;
+            position: relative;
+        }
 
-/* Header Styles */
-.intellio-header-area {
-  position: relative;
-  z-index: 999;
-  padding: 20px 0;
-}
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d9ff;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+        }
 
-.intellio-header-area.sticky {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: rgba(10, 14, 39, 0.95);
-  backdrop-filter: blur(10px);
-  animation: slideInDown 0.5s ease;
-  box-shadow: 0 2px 20px rgba(103, 102, 255, 0.3);
-}
+        .cursor.expand {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 217, 255, 0.1);
+        }
 
-@keyframes slideInDown {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
+        /* Canvas Background with Enhanced Parallax */
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
 
-.auto-container {
-  max-width: 1350px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
+        .container {
+            position: relative;
+            z-index: 1;
+        }
 
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+        /* Intro Animation */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: fadeOut 0.8s ease 2.5s forwards;
+        }
 
-.header-logo img {
-  height: 40px;
-}
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
 
-.header-menu ul {
-  display: flex;
-  list-style: none;
-  gap: 30px;
-  margin: 0;
-  padding: 0;
-}
+        .intro-logo {
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glitchIntro 1.5s ease;
+            letter-spacing: 0.1em;
+        }
 
-.header-menu ul li a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 16px;
-  transition: color 0.3s;
-  position: relative;
-}
+        @keyframes glitchIntro {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(3px, -3px); }
+            60% { transform: translate(-3px, -3px); }
+            80% { transform: translate(3px, 3px); }
+        }
 
-.header-menu ul li a:hover {
-  color: #6766FF;
-}
+        .loading-bar {
+            width: 300px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-.header-right-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00d9ff, #7b2ff7);
+            width: 0%;
+            animation: loadProgress 2s ease forwards;
+        }
 
-.header-btn a {
-  display: inline-block;
-  padding: 12px 30px;
-  background: #6766FF;
-  color: white;
-  text-decoration: none;
-  border-radius: 50px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
+        @keyframes loadProgress {
+            to { width: 100%; }
+        }
 
-.header-btn a:hover {
-  background: #5555EE;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(103, 102, 255, 0.4);
-}
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1s ease 3s forwards;
+        }
 
-.header-btn a i {
-  margin-left: 8px;
-}
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
 
-/* Banner Section */
-.demo-section {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 120px 20px 60px;
-  overflow: hidden;
-}
+        .logo {
+            font-size: 6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 4s ease-in-out infinite;
+            letter-spacing: 0.05em;
+            transition: transform 0.3s ease;
+        }
 
-.content-wrapper {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  max-width: 800px;
-}
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
 
-.content-wrapper h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  color: #fff;
-  margin-bottom: 20px;
-  font-weight: 700;
-  line-height: 1.2;
-}
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #a0a0b0;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 3.3s backwards;
+        }
 
-.content-wrapper p {
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  color: #a0aec0;
-  line-height: 1.6;
-  margin-bottom: 40px;
-}
+        .hero-description {
+            font-size: 1.1rem;
+            color: #707080;
+            max-width: 600px;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 3.6s backwards;
+        }
 
-.cta-button {
-  display: inline-block;
-  padding: 18px 45px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  text-decoration: none;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 18px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-}
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
 
-.cta-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
-}
+        /* Countdown Timer */
+        .countdown-container {
+            display: flex;
+            gap: 2rem;
+            margin: 3rem 0;
+            animation: fadeInUp 1s ease 3.9s backwards;
+        }
 
-/* Feature labels */
-.ai-features {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 5;
-  pointer-events: none;
-}
+        .countdown-box {
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem 2.5rem;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
 
-.feature-label {
-  position: absolute;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  padding: 10px 20px;
-  background: rgba(102, 126, 234, 0.15);
-  border: 1px solid rgba(102, 126, 234, 0.4);
-  border-radius: 25px;
-  backdrop-filter: blur(10px);
-  animation: float 3s ease-in-out infinite;
-}
+        .countdown-box:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: #00d9ff;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
 
-.feature-label:nth-child(1) {
-  top: 15%;
-  left: 10%;
-  animation-delay: 0s;
-}
+        .countdown-number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
 
-.feature-label:nth-child(2) {
-  top: 25%;
-  right: 15%;
-  animation-delay: 1s;
-}
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #a0a0b0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
 
-.feature-label:nth-child(3) {
-  bottom: 25%;
-  left: 15%;
-  animation-delay: 2s;
-}
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
 
-.feature-label:nth-child(4) {
-  bottom: 35%;
-  right: 10%;
-  animation-delay: 1.5s;
-}
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-15px); }
+            60% { transform: translateX(-50%) translateY(-8px); }
+        }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-15px);
-  }
-}
+        .scroll-text {
+            color: #00d9ff;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
 
-/* Content sections */
-.content-section {
-  position: relative;
-  z-index: 10;
-  background: #0a0e27;
-  padding: 80px 20px;
-}
+        .scroll-arrow {
+            width: 24px;
+            height: 40px;
+            border: 2px solid #00d9ff;
+            border-radius: 20px;
+            position: relative;
+            margin: 0 auto;
+        }
 
-.section-title {
-  text-align: center;
-  color: #fff;
-  font-size: 2.5rem;
-  margin-bottom: 60px;
-  font-weight: 700;
-}
+        .scroll-arrow::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #00d9ff;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: scrollDot 2s infinite;
+        }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+        @keyframes scrollDot {
+            0%, 100% { top: 8px; opacity: 1; }
+            50% { top: 24px; opacity: 0.3; }
+        }
 
-.feature-card {
-  background: linear-gradient(145deg, rgba(15, 9, 39, 0.9), rgba(33, 27, 57, 0.9));
-  padding: 40px;
-  border-radius: 20px;
-  border: 1px solid rgba(103, 102, 255, 0.3);
-  transition: all 0.3s ease;
-}
+        /* Story Section */
+        .story-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
 
-.feature-card:hover {
-  transform: translateY(-10px);
-  border-color: #6766FF;
-  box-shadow: 0 20px 40px rgba(103, 102, 255, 0.3);
-}
+        .story-content {
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
 
-.feature-card h3 {
-  color: #fff;
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-}
+        .story-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.feature-card p {
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
-}
+        .story-text h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
 
-/* Mobile optimization */
-@media (max-width: 768px) {
-  .header-menu {
-    display: none;
-  }
-  
-  .feature-label {
-    font-size: 10px;
-    padding: 6px 12px;
-  }
-  
-  .feature-label:nth-child(3),
-  .feature-label:nth-child(4) {
-    display: none;
-  }
-}
-</style>
+        .story-text p {
+            font-size: 1.15rem;
+            color: #a0a0b0;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-visual {
+            position: relative;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* DNA Helix */
+        .dna-container {
+            width: 200px;
+            height: 350px;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .dna-strand {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotateDNA 12s linear infinite;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes rotateDNA {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .dna-pair {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            left: 0;
+            transform-style: preserve-3d;
+        }
+
+        .dna-base {
+            position: absolute;
+            width: 40%;
+            height: 4px;
+            background: linear-gradient(90deg, #00d9ff, #7b2ff7);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.6);
+        }
+
+        .dna-base:first-child { left: 0; }
+        .dna-base:last-child { right: 0; }
+
+        .dna-connector {
+            position: absolute;
+            left: 40%;
+            width: 20%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            top: 1px;
+        }
+
+        /* Features Section */
+        .features-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #707080;
+            text-align: center;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s;
+        }
+
+        .section-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0;
+            transform: translateY(50px);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 217, 255, 0.4);
+            background: rgba(0, 217, 255, 0.03);
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.2);
+        }
+
+        /* Professional SVG Icons */
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1.5rem;
+            display: block;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.5));
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .feature-desc {
+            font-size: 1rem;
+            color: #a0a0b0;
+            line-height: 1.6;
+        }
+
+        /* Modal Popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(123, 47, 247, 0.1));
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 30px 80px rgba(0, 217, 255, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 2rem;
+            top: 2rem;
+            font-size: 2rem;
+            color: #00d9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg);
+            background: rgba(0, 217, 255, 0.2);
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-subtitle {
+            font-size: 1.1rem;
+            color: #a0a0b0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-list li {
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+            color: #fff;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .modal-list li:before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #00d9ff;
+            font-weight: bold;
+        }
+
+        .modal-list li:hover {
+            padding-left: 2rem;
+            color: #00d9ff;
+        }
+
+        .modal-cta {
+            margin-top: 2rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
+        }
+
+        .modal-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.6);
+        }
+
+        /* Timeline Section */
+        .timeline-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+        }
+
+        .timeline-container {
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            margin-top: 3rem;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, transparent, #00d9ff, #7b2ff7, transparent);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 4rem;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+            transform: translateX(50px);
+        }
+
+        .timeline-item:nth-child(even).visible {
+            transform: translateX(0);
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.3);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 2rem;
+            width: 20px;
+            height: 20px;
+            background: #00d9ff;
+            border: 4px solid #000;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.8);
+        }
+
+        .timeline-date {
+            font-size: 1.1rem;
+            color: #00d9ff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #fff;
+        }
+
+        .timeline-desc {
+            font-size: 1rem;
+            color: #a0a0b0;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .cta-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .cta-title.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .cta-subtitle {
+            font-size: 1.3rem;
+            color: #a0a0b0;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s;
+        }
+
+        .cta-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notify-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            width: 100%;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s;
+        }
+
+        .notify-form.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notify-input {
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .notify-input:focus {
+            border-color: #00d9ff;
+            background: rgba(0, 217, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        }
+
+        .notify-input::placeholder {
+            color: #707080;
+        }
+
+        .notify-btn {
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(135deg, #00d9ff, #7b2ff7);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
+        }
+
+        .notify-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.6);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s;
+        }
+
+        .social-links.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #00d9ff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateY(-5px) rotate(360deg);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.4);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #00d9ff, #7b2ff7);
+            z-index: 9998;
+            transition: width 0.1s ease;
+        }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 3.5rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .countdown-container { 
+                flex-wrap: wrap; 
+                gap: 1rem;
+            }
+            .countdown-box {
+                padding: 1.5rem 2rem;
+                min-width: 100px;
+            }
+            .countdown-number { font-size: 2.5rem; }
+            .story-content { 
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .story-text h2 { font-size: 2rem; }
+            .section-title { font-size: 2.5rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .timeline-item { flex-direction: column !important; }
+            .timeline-content { width: 100%; }
+            .timeline-line { display: none; }
+            .cta-title { font-size: 2.5rem; }
+            .notify-form { flex-direction: column; }
+            .modal-content { padding: 2rem; }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0f;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00d9ff, #7b2ff7);
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
 
-<!-- Header Area -->
-<div class="intellio-header-area" id="sticky-header">
-  <div class="auto-container">
-    <div class="row">
-      <div class="header-logo">
-        <a href="#"><img src="https://via.placeholder.com/120x40/6766FF/FFFFFF?text=INTELLIO" alt="logo"></a>
-      </div>
-      <div class="header-menu">
-        <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </div>
-      <div class="header-right-wrapper">
-        <div class="header-btn">
-          <a href="#trial">Free Trial <i>→</i></a>
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Intro Screen -->
+    <div class="intro-screen">
+        <div class="intro-logo">CUDIORT</div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
 
-<!-- Banner Section with Particles -->
-<div class="demo-section" id="home">
-  <div class="particle-container">
-    <canvas id="neuralCanvas"></canvas>
-  </div>
-  
-  <div class="ai-features">
-    <div class="feature-label">🧠 Neural Networks</div>
-    <div class="feature-label">⚡ Automation</div>
-    <div class="feature-label">🔮 Predictive AI</div>
-    <div class="feature-label">🚀 Innovation</div>
-  </div>
-  
-  <div class="content-wrapper">
-    <h1>AI-Powered Future</h1>
-    <p>Experience the convergence of artificial intelligence and innovation. Our neural network visualization represents the interconnected intelligence driving your business forward.</p>
-    <a href="#explore" class="cta-button">Explore AI Solutions</a>
-  </div>
-</div>
+    <!-- Canvas for Enhanced Particle Network -->
+    <canvas id="canvas"></canvas>
 
-<!-- Content Section -->
-<div class="content-section" id="services">
-  <h2 class="section-title">Our AI Services</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <h3>Machine Learning</h3>
-      <p>Advanced algorithms that learn from data to make intelligent predictions and decisions.</p>
+    <!-- Modal Popup -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-subtitle" id="modalSubtitle"></p>
+            <ul class="modal-list" id="modalList"></ul>
+            <button class="modal-cta" onclick="closeModal()">Explore More →</button>
+        </div>
     </div>
-    <div class="feature-card">
-      <h3>Natural Language Processing</h3>
-      <p>Enable computers to understand, interpret, and generate human language naturally.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Computer Vision</h3>
-      <p>Extract meaningful information from digital images and videos automatically.</p>
-    </div>
-  </div>
-</div>
 
-<script>
-// Neural Network Particle System
-class NeuralNetworkParticles {
-  constructor(canvasId) {
-    this.canvas = document.getElementById(canvasId);
-    this.ctx = this.canvas.getContext('2d');
-    this.particles = [];
-    this.mouse = { x: null, y: null, radius: 150 };
-    this.particleCount = this.isMobile() ? 30 : 60;
-    
-    this.init();
-    this.setupEventListeners();
-    this.animate();
-  }
-  
-  isMobile() {
-    return window.innerWidth < 768;
-  }
-  
-  init() {
-    this.resizeCanvas();
-    this.createParticles();
-  }
-  
-  resizeCanvas() {
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
-  }
-  
-  createParticles() {
-    this.particles = [];
-    for (let i = 0; i < this.particleCount; i++) {
-      this.particles.push({
-        x: Math.random() * this.canvas.width,
-        y: Math.random() * this.canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        radius: Math.random() * 2 + 1,
-        color: this.getNodeColor(),
-        pulseSpeed: Math.random() * 0.02 + 0.01,
-        pulsePhase: Math.random() * Math.PI * 2,
-        type: Math.random() > 0.7 ? 'neuron' : 'data'
-      });
-    }
-  }
-  
-  getNodeColor() {
-    const colors = [
-      'rgba(102, 126, 234, ',
-      'rgba(118, 75, 162, ',
-      'rgba(237, 100, 166, ',
-      'rgba(72, 219, 251, '
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-  }
-  
-  setupEventListeners() {
-    window.addEventListener('resize', () => {
-      this.resizeCanvas();
-      this.particleCount = this.isMobile() ? 30 : 60;
-      this.createParticles();
-    });
-    
-    window.addEventListener('mousemove', (e) => {
-      this.mouse.x = e.x;
-      this.mouse.y = e.y;
-    });
-    
-    window.addEventListener('touchmove', (e) => {
-      if (e.touches.length > 0) {
-        this.mouse.x = e.touches[0].clientX;
-        this.mouse.y = e.touches[0].clientY;
-      }
-    });
-    
-    window.addEventListener('touchend', () => {
-      this.mouse.x = null;
-      this.mouse.y = null;
-    });
-  }
-  
-  drawParticle(particle) {
-    const pulse = Math.sin(Date.now() * particle.pulseSpeed + particle.pulsePhase);
-    const alpha = 0.4 + pulse * 0.3;
-    
-    // Glow effect
-    const gradient = this.ctx.createRadialGradient(
-      particle.x, particle.y, 0,
-      particle.x, particle.y, particle.radius * 3
-    );
-    gradient.addColorStop(0, particle.color + '0.8)');
-    gradient.addColorStop(1, particle.color + '0)');
-    
-    this.ctx.fillStyle = gradient;
-    this.ctx.beginPath();
-    this.ctx.arc(particle.x, particle.y, particle.radius * 3, 0, Math.PI * 2);
-    this.ctx.fill();
-    
-    // Core
-    this.ctx.fillStyle = particle.color + alpha + ')';
-    this.ctx.beginPath();
-    this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-    this.ctx.fill();
-    
-    // Neuron type indicator
-    if (particle.type === 'neuron') {
-      this.ctx.strokeStyle = particle.color + '0.6)';
-      this.ctx.lineWidth = 1;
-      this.ctx.beginPath();
-      this.ctx.arc(particle.x, particle.y, particle.radius * 2, 0, Math.PI * 2);
-      this.ctx.stroke();
-    }
-  }
-  
-  drawConnections() {
-    for (let i = 0; i < this.particles.length; i++) {
-      for (let j = i + 1; j < this.particles.length; j++) {
-        const dx = this.particles[i].x - this.particles[j].x;
-        const dy = this.particles[i].y - this.particles[j].y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const maxDistance = this.isMobile() ? 120 : 150;
-        
-        if (distance < maxDistance) {
-          const opacity = (1 - distance / maxDistance) * 0.3;
-          
-          this.ctx.strokeStyle = `rgba(102, 126, 234, ${opacity})`;
-          this.ctx.lineWidth = 0.5;
-          this.ctx.beginPath();
-          this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-          this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-          this.ctx.stroke();
-          
-          // Signal pulse
-          if (Math.random() > 0.98) {
-            const signalProgress = (Date.now() * 0.001) % 1;
-            const signalX = this.particles[i].x + dx * signalProgress;
-            const signalY = this.particles[i].y + dy * signalProgress;
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="logo">CUDIORT</div>
+            <div class="hero-subtitle">Where Science Meets Intelligence</div>
+            <div class="hero-description">
+                We're building the future of technology, merging cutting-edge AI with computational biology 
+                to create solutions that transform industries.
+            </div>
             
-            this.ctx.fillStyle = `rgba(72, 219, 251, ${opacity * 2})`;
-            this.ctx.beginPath();
-            this.ctx.arc(signalX, signalY, 2, 0, Math.PI * 2);
-            this.ctx.fill();
-          }
+            <div class="countdown-container" id="countdown">
+                <div class="countdown-box">
+                    <span class="countdown-number" id="days">00</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="hours">00</span>
+                    <span class="countdown-label">Hours</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="minutes">00</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="seconds">00</span>
+                    <span class="countdown-label">Seconds</span>
+                </div>
+            </div>
+
+            <div class="scroll-indicator">
+                <div class="scroll-text">Discover More</div>
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <!-- Story Section -->
+        <section class="story-section">
+            <div class="story-content" data-scroll>
+                <div class="story-text">
+                    <h2>Innovation in Our DNA</h2>
+                    <p>
+                        At Cudiort, we're not just another tech company. We're pioneers at the intersection 
+                        of artificial intelligence and biological sciences, creating solutions that didn't 
+                        exist before.
+                    </p>
+                    <p>
+                        Our team of scientists, engineers, and creators are working around the clock to 
+                        bring you a platform that will revolutionize how you work, create, and innovate.
+                    </p>
+                </div>
+                <div class="story-visual">
+                    <div class="dna-container">
+                        <div class="dna-strand" id="dnaStrand"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="section-title" data-scroll>What We're Building</h2>
+            <p class="section-subtitle" data-scroll>Five divisions, one powerful ecosystem</p>
+            
+            <div class="features-grid">
+                <div class="feature-card" data-scroll style="transition-delay: 0.1s" onclick="openModal('science')">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M32 8L36 20L48 24L36 28L32 40L28 28L16 24L28 20L32 8Z" stroke="#00d9ff" stroke-width="2" fill="rgba(0,217,255,0.2)"/>
+                        <circle cx="20" cy="44" r="3" fill="#7b2ff7"/>
+                        <circle cx="44" cy="44" r="3" fill="#00d9ff"/>
+                        <path d="M20 44L32 32L44 44" stroke="#00d9ff" stroke-width="2"/>
+                        <circle cx="32" cy="32" r="4" fill="#7b2ff7"/>
+                        <path d="M16 52L20 44L24 52M40 52L44 44L48 52" stroke="#00d9ff" stroke-width="2"/>
+                    </svg>
+                    <h3 class="feature-title">Science & Research Tech</h3>
+                    <p class="feature-desc">
+                        Advanced bioinformatics and computational biology tools that push the boundaries 
+                        of research and discovery.
+                    </p>
+                </div>
+
+                <div class="feature-card" data-scroll style="transition-delay: 0.2s" onclick="openModal('ai')">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="12" y="12" width="40" height="40" rx="8" stroke="#00d9ff" stroke-width="2" fill="rgba(0,217,255,0.1)"/>
+                        <circle cx="24" cy="28" r="3" fill="#00d9ff"/>
+                        <circle cx="40" cy="28" r="3" fill="#00d9ff"/>
+                        <path d="M24 40Q32 48 40 40" stroke="#7b2ff7" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M16 8L16 12M48 8L48 12M56 16L52 16M56 48L52 48M16 52L16 56M48 52L48 56M8 16L12 16M8 48L12 48" stroke="#00d9ff" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h3 class="feature-title">Artificial Intelligence</h3>
+                    <p class="feature-desc">
+                        Intelligent automation and machine learning systems that transform your business 
+                        operations and workflows.
+                    </p>
+                </div>
+
+                <div class="feature-card" data-scroll style="transition-delay: 0.3s" onclick="openModal('dev')">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="16" width="48" height="36" rx="4" stroke="#00d9ff" stroke-width="2" fill="rgba(0,217,255,0.1)"/>
+                        <path d="M8 24L56 24" stroke="#00d9ff" stroke-width="2"/>
+                        <circle cx="14" cy="20" r="1.5" fill="#7b2ff7"/>
+                        <circle cx="20" cy="20" r="1.5" fill="#7b2ff7"/>
+                        <circle cx="26" cy="20" r="1.5" fill="#7b2ff7"/>
+                        <path d="M20 32L26 38L20 44M30 44L36 44" stroke="#00d9ff" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h3 class="feature-title">Custom Development</h3>
+                    <p class="feature-desc">
+                        Tailored software solutions built with cutting-edge technologies to meet your 
+                        unique business needs.
+                    </p>
+                </div>
+
+                <div class="feature-card" data-scroll style="transition-delay: 0.4s" onclick="openModal('marketing')">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M32 8L36 24L48 28L36 32L32 48L28 32L16 28L28 24L32 8Z" stroke="#00d9ff" stroke-width="2" fill="rgba(0,217,255,0.2)"/>
+                        <path d="M12 48L16 52L20 48M44 48L48 52L52 48" stroke="#7b2ff7" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8 32Q12 28 16 32M48 32Q52 28 56 32" stroke="#00d9ff" stroke-width="2"/>
+                    </svg>
+                    <h3 class="feature-title">Digital Marketing</h3>
+                    <p class="feature-desc">
+                        Data-driven strategies and campaigns designed to amplify your brand and drive 
+                        measurable growth.
+                    </p>
+                </div>
+
+                <div class="feature-card" data-scroll style="transition-delay: 0.5s" onclick="openModal('design')">
+                    <svg class="feature-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 48L24 16L40 20L48 16L40 48L32 44L16 48Z" stroke="#00d9ff" stroke-width="2" fill="rgba(0,217,255,0.1)"/>
+                        <circle cx="32" cy="32" r="6" stroke="#7b2ff7" stroke-width="2" fill="rgba(123,47,247,0.2)"/>
+                        <path d="M24 16L28 24M40 20L36 28" stroke="#00d9ff" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h3 class="feature-title">Creative Design</h3>
+                    <p class="feature-desc">
+                        Stunning visual experiences that tell your story and captivate your audience 
+                        across all platforms.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section class="timeline-section">
+            <h2 class="section-title" data-scroll>Our Journey to Launch</h2>
+            <p class="section-subtitle" data-scroll>Every great platform has a story</p>
+
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item" data-scroll>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Phase 1 - Complete ✓</div>
+                        <div class="timeline-title">Foundation Built</div>
+                        <div class="timeline-desc">
+                            Core infrastructure designed and implemented. Architecture ready to scale.
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <div class="timeline-item" data-scroll>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Phase 2 - 95% Complete</div>
+                        <div class="timeline-title">Integration in Progress</div>
+                        <div class="timeline-desc">
+                            All five divisions integrated. AI models trained. APIs functioning beautifully.
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <div class="timeline-item" data-scroll>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Phase 3 - Current</div>
+                        <div class="timeline-title">Testing & Refinement</div>
+                        <div class="timeline-desc">
+                            Rigorous quality assurance. Performance optimization. Making everything perfect.
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+
+                <div class="timeline-item" data-scroll>
+                    <div class="timeline-content">
+                        <div class="timeline-date">Q2 2026</div>
+                        <div class="timeline-title">Public Launch</div>
+                        <div class="timeline-desc">
+                            The wait is over. Cudiort goes live and changes everything.
+                        </div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2 class="cta-title" data-scroll>Be Among the First</h2>
+            <p class="cta-subtitle" data-scroll>
+                Join our exclusive launch list and get early access when we go live
+            </p>
+            
+            <form class="notify-form" data-scroll onsubmit="handleNotify(event)">
+                <input 
+                    type="email" 
+                    class="notify-input" 
+                    placeholder="Enter your email" 
+                    required
+                    id="emailInput"
+                >
+                <button type="submit" class="notify-btn">Notify Me</button>
+            </form>
+
+            <div class="social-links" data-scroll>
+                <a href="#" class="social-link">𝕏</a>
+                <a href="#" class="social-link">in</a>
+                <a href="#" class="social-link">📘</a>
+                <a href="#" class="social-link">📷</a>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Service Modal Data
+        const serviceData = {
+            science: {
+                title: "Science & Research Tech",
+                subtitle: "Cutting-edge computational biology and bioinformatics solutions for the next generation of research.",
+                items: [
+                    "Bioinformatics & Data Analysis",
+                    "Bio-Computing & Simulation",
+                    "DNA Data Storage & Cloud",
+                    "AI for Biology"
+                ]
+            },
+            ai: {
+                title: "Artificial Intelligence",
+                subtitle: "Intelligent automation and machine learning systems that transform how businesses operate.",
+                items: [
+                    "AI Agent Development",
+                    "Workflow Automation",
+                    "Synthetic Data Services",
+                    "Edge AI & Hardware Optimization"
+                ]
+            },
+            dev: {
+                title: "Custom Development",
+                subtitle: "Tailored software solutions built from the ground up to meet your exact specifications.",
+                items: [
+                    "Web & Mobile Applications",
+                    "Enterprise Software",
+                    "API Development & Integration",
+                    "Full-Stack Solutions"
+                ]
+            },
+            marketing: {
+                title: "Digital Marketing",
+                subtitle: "Data-driven strategies that amplify your brand and drive measurable growth.",
+                items: [
+                    "SEO & Content Strategy",
+                    "Paid Advertising Campaigns",
+                    "Social Media Management",
+                    "Analytics & Optimization"
+                ]
+            },
+            design: {
+                title: "Creative Design",
+                subtitle: "Visual storytelling that captures attention and communicates your unique identity.",
+                items: [
+                    "Brand Identity & Design",
+                    "Video Production & Editing",
+                    "Photography & Retouching",
+                    "Motion Graphics"
+                ]
+            }
+        };
+
+        function openModal(service) {
+            const data = serviceData[service];
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            
+            const list = document.getElementById('modalList');
+            list.innerHTML = '';
+            data.items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                list.appendChild(li);
+            });
+            
+            document.getElementById('serviceModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-      }
-    }
-  }
-  
-  drawMouseInteraction() {
-    if (!this.mouse.x || !this.mouse.y) return;
-    
-    this.particles.forEach(particle => {
-      const dx = this.mouse.x - particle.x;
-      const dy = this.mouse.y - particle.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      if (distance < this.mouse.radius) {
-        const opacity = (1 - distance / this.mouse.radius) * 0.5;
-        this.ctx.strokeStyle = `rgba(237, 100, 166, ${opacity})`;
-        this.ctx.lineWidth = 1;
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.mouse.x, this.mouse.y);
-        this.ctx.lineTo(particle.x, particle.y);
-        this.ctx.stroke();
-        
-        const force = (this.mouse.radius - distance) / this.mouse.radius;
-        particle.vx -= (dx / distance) * force * 0.1;
-        particle.vy -= (dy / distance) * force * 0.1;
-      }
-    });
-  }
-  
-  updateParticles() {
-    this.particles.forEach(particle => {
-      particle.x += particle.vx;
-      particle.y += particle.vy;
-      
-      if (particle.x < 0 || particle.x > this.canvas.width) {
-        particle.vx *= -0.8;
-        particle.x = Math.max(0, Math.min(this.canvas.width, particle.x));
-      }
-      if (particle.y < 0 || particle.y > this.canvas.height) {
-        particle.vy *= -0.8;
-        particle.y = Math.max(0, Math.min(this.canvas.height, particle.y));
-      }
-      
-      particle.vx *= 0.99;
-      particle.vy *= 0.99;
-      
-      particle.vx += (Math.random() - 0.5) * 0.02;
-      particle.vy += (Math.random() - 0.5) * 0.02;
-    });
-  }
-  
-  animate() {
-    this.ctx.fillStyle = 'rgba(10, 14, 39, 0.1)';
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    
-    this.drawConnections();
-    this.particles.forEach(p => this.drawParticle(p));
-    this.drawMouseInteraction();
-    this.updateParticles();
-    
-    requestAnimationFrame(() => this.animate());
-  }
-}
 
-// Initialize particles
-document.addEventListener('DOMContentLoaded', () => {
-  new NeuralNetworkParticles('neuralCanvas');
-  
-  // Sticky header
-  const header = document.getElementById('sticky-header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 100) {
-      header.classList.add('sticky');
-    } else {
-      header.classList.remove('sticky');
-    }
-  });
-});
-</script>
+        function closeModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
 
+        // Close modal on outside click
+        document.getElementById('serviceModal').addEventListener('click', (e) => {
+            if (e.target.id === 'serviceModal') {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Smooth Cursor
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            const speed = 0.15;
+            cursorX += (mouseX - cursorX) * speed;
+            cursorY += (mouseY - cursorY) * speed;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Cursor expand on hover
+        const interactiveElements = document.querySelectorAll('a, button, input, .feature-card, .countdown-box, .timeline-content');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
+        });
+
+        // Enhanced Canvas Particle System with Bio-themed particles
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 100;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 0.5;
+                this.type = Math.floor(Math.random() * 4); // Different particle types
+                this.angle = Math.random() * Math.PI * 2;
+                this.angleSpeed = (Math.random() - 0.5) * 0.02;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.angle += this.angleSpeed;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    const force = (150 - distance) / 150;
+                    this.x -= (dx / distance) * force * 3;
+                    this.y -= (dy / distance) * force * 3;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+
+                switch(this.type) {
+                    case 0: // Neuron-like
+                        ctx.strokeStyle = 'rgba(0, 217, 255, 0.6)';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                        ctx.stroke();
+                        for(let i = 0; i < 4; i++) {
+                            const angle = (Math.PI * 2 * i) / 4;
+                            ctx.beginPath();
+                            ctx.moveTo(0, 0);
+                            ctx.lineTo(Math.cos(angle) * this.size * 3, Math.sin(angle) * this.size * 3);
+                            ctx.stroke();
+                        }
+                        break;
+                    
+                    case 1: // Virus-like hexagon
+                        ctx.fillStyle = 'rgba(123, 47, 247, 0.5)';
+                        ctx.beginPath();
+                        for(let i = 0; i < 6; i++) {
+                            const angle = (Math.PI * 2 * i) / 6;
+                            const x = Math.cos(angle) * this.size * 2;
+                            const y = Math.sin(angle) * this.size * 2;
+                            if(i === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.strokeStyle = 'rgba(123, 47, 247, 0.8)';
+                        ctx.stroke();
+                        break;
+                    
+                    case 2: // Molecule/Drug
+                        ctx.fillStyle = 'rgba(0, 217, 255, 0.6)';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = 'rgba(123, 47, 247, 0.6)';
+                        ctx.beginPath();
+                        ctx.arc(this.size * 2, 0, this.size * 0.8, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.lineTo(this.size * 2, 0);
+                        ctx.stroke();
+                        break;
+                    
+                    case 3: // DNA base pair
+                        ctx.strokeStyle = 'rgba(0, 217, 255, 0.5)';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(-this.size * 2, 0);
+                        ctx.lineTo(this.size * 2, 0);
+                        ctx.stroke();
+                        ctx.fillStyle = 'rgba(0, 217, 255, 0.7)';
+                        ctx.beginPath();
+                        ctx.arc(-this.size * 2, 0, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = 'rgba(123, 47, 247, 0.7)';
+                        ctx.beginPath();
+                        ctx.arc(this.size * 2, 0, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        break;
+                }
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        const opacity = 0.3 * (1 - distance / 150);
+                        ctx.strokeStyle = `rgba(0, 217, 255, ${opacity})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            connectParticles();
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // DNA Helix Generation
+        const dnaStrand = document.getElementById('dnaStrand');
+        const pairCount = 15;
+
+        for (let i = 0; i < pairCount; i++) {
+            const pair = document.createElement('div');
+            pair.className = 'dna-pair';
+            pair.style.top = (i * 23) + 'px';
+            pair.style.transform = `rotateY(${i * 24}deg)`;
+            
+            const base1 = document.createElement('div');
+            base1.className = 'dna-base';
+            const base2 = document.createElement('div');
+            base2.className = 'dna-base';
+            const connector = document.createElement('div');
+            connector.className = 'dna-connector';
+            
+            pair.appendChild(base1);
+            pair.appendChild(connector);
+            pair.appendChild(base2);
+            dnaStrand.appendChild(pair);
+        }
+
+        // Countdown Timer
+        const launchDate = new Date('2025-03-01T00:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = launchDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = 'We are launching soon !';
+            }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrolled = window.scrollY;
+            const progress = (scrolled / documentHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        });
+
+        // Scroll Animations
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('[data-scroll]').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Email Notification Form
+        function handleNotify(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            
+            const form = e.target;
+            form.innerHTML = `
+                <div style="color: #00d9ff; font-size: 1.2rem; padding: 1rem;">
+                    ✓ You're on the list! We'll notify you at launch.
+                </div>
+            `;
+            
+            console.log('Email registered:', email);
+        }
+
+        // Enhanced Parallax Effect
+        let ticking = false;
+        let lastScrollY = 0;
+
+        window.addEventListener('scroll', () => {
+            lastScrollY = window.scrollY;
+            
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    // Enhanced canvas parallax - more noticeable
+                    canvas.style.transform = `translateY(${lastScrollY * 0.8}px) scale(1.1)`;
+                    
+                    // Hero parallax
+                    const logo = document.querySelector('.logo');
+                    if (logo && lastScrollY < window.innerHeight) {
+                        logo.style.transform = `translateY(${lastScrollY * 0.5}px)`;
+                        logo.style.opacity = 1 - (lastScrollY / window.innerHeight);
+                    }
+
+                    const heroSubtitle = document.querySelector('.hero-subtitle');
+                    if (heroSubtitle && lastScrollY < window.innerHeight) {
+                        heroSubtitle.style.transform = `translateY(${lastScrollY * 0.4}px)`;
+                    }
+
+                    const countdownContainer = document.querySelector('.countdown-container');
+                    if (countdownContainer && lastScrollY < window.innerHeight) {
+                        countdownContainer.style.transform = `translateY(${lastScrollY * 0.3}px)`;
+                    }
+
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Mouse parallax for cards
+        document.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            
+            document.querySelectorAll('.feature-card').forEach((card, index) => {
+                if (!card.matches(':hover')) {
+                    const depth = (index + 1) * 0.5;
+                    card.style.transform = `translate(${moveX * depth}px, ${moveY * depth}px)`;
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+            } else if (e.key === 'ArrowUp') {
+                window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+            }
+        });
+    </script>
 </body>
 </html>
